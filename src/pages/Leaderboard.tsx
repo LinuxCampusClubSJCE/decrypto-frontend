@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { fetchData } from '../utils/fetch'
 import { Table } from 'antd'
+import LoadingContext from '../utils/LoadingContext'
 
 interface leaderboardType {
     rank: number
@@ -24,8 +25,12 @@ const columns = [
 ]
 
 const Leaderboard = () => {
-    const loadData = async () => {
+    const { setLoading } = useContext(LoadingContext)
+
+    const loadData = useCallback(async () => {
+        setLoading(true)
         const data = await fetchData({ path: '/users/leaderboard' })
+        setLoading(false)
         if (data.success) {
             const leaderboardData = data.leaderboard.map(
                 (item: leaderboardType, index: number) => {
@@ -38,10 +43,10 @@ const Leaderboard = () => {
 
             setLeaderboard(leaderboardData)
         }
-    }
+    }, [setLoading])
     useEffect(() => {
         loadData()
-    }, [])
+    }, [loadData])
     const [leaderboard, setLeaderboard] = useState<leaderboardType[]>([])
     return (
         <div>

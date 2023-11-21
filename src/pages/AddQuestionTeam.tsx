@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { Button, Form, Input, Rate, Upload } from 'antd'
 import { Typography } from 'antd'
 import { fetchData } from '../utils/fetch'
@@ -7,6 +7,7 @@ import { message } from 'antd'
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import type { UploadChangeParam } from 'antd/es/upload'
+import LoadingContext from '../utils/LoadingContext'
 const { Title } = Typography
 type FieldType = {
     image: string
@@ -73,13 +74,13 @@ const beforeUpload = (file: RcFile) => {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
     if (!isJpgOrPng) {
         message.error('You can only upload JPG/PNG file!')
-        navigator.vibrate(300)
+        navigator.vibrate(200)
     }
     const imgSize = file.size / 1024 / 1024
     const isLt10M = imgSize < 10
     if (!isLt10M) {
         message.error(`Image - ${imgSize}. Image must smaller than 10MB!`)
-        navigator.vibrate(300)
+        navigator.vibrate(200)
     }
     return isJpgOrPng && isLt10M
 }
@@ -88,40 +89,46 @@ const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo)
 }
 const AddQuestionTeam = () => {
+    const { setLoading } = useContext(LoadingContext)
     const [imageLoading, setImageLoading] = useState(false)
     const [form] = Form.useForm()
     const navigate = useNavigate()
     let { id } = useParams()
     const fetchUser = useCallback(
         async (id: string) => {
+            setLoading(true)
             const data = await fetchData({ path: `/question/${id}` })
+            setLoading(false)
             if (data.success === false) {
                 message.error(data.message)
-                navigator.vibrate(300)
+                navigator.vibrate(200)
             } else {
                 form.setFieldsValue(data.question)
                 setImageUrl(data.question.image)
             }
         },
-        [form]
+        [form, setLoading]
     )
-    const checkStarted = async () => {
+    const checkStarted = useCallback(async () => {
+        setLoading(true)
         const data = await fetchData({
             path: '/question/modifyallowed'
         })
+        setLoading(false)
         if (data.success && data.allowed === false) {
             message.error('Registration not yet started')
         }
-    }
+    }, [setLoading])
 
     useEffect(() => {
         checkStarted()
         if (id) fetchUser(id)
-    }, [fetchUser, id])
+    }, [checkStarted, fetchUser, id])
 
     const onFinish = async (values: any) => {
         console.log('Success:', values)
         let data
+        setLoading(true)
         if (id) {
             data = data = await fetchData({
                 path: `/question/${id}`,
@@ -135,9 +142,10 @@ const AddQuestionTeam = () => {
                 body: { ...values, image: imageUrl }
             })
         }
+        setLoading(false)
         if (data.success === false) {
             message.error(data.message)
-            navigator.vibrate(300)
+            navigator.vibrate(200)
             return
         }
         message.success(data.message)

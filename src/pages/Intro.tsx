@@ -1,7 +1,7 @@
 import { Button, Flex, message } from 'antd'
 import { Link } from 'react-router-dom'
 import { Typography } from 'antd'
-import { useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { fetchData } from '../utils/fetch'
 import CountdownTimer from '../components/CountDownTimer'
 import {
@@ -9,15 +9,20 @@ import {
     InstagramOutlined,
     LinkedinOutlined
 } from '@ant-design/icons'
+import LoadingContext from '../utils/LoadingContext'
 
 const { Title } = Typography
 const Intro = () => {
+    const { setLoading } = useContext(LoadingContext)
+
     const [startTime, setStartTime] = useState<number>(0)
-    const checkContest = async () => {
+    const checkContest = useCallback(async () => {
+        setLoading(true)
         const data = await fetchData({ path: '/contest/details' })
+        setLoading(false)
         if (data.success === false) {
             message.error(data.message)
-            navigator.vibrate(300)
+            navigator.vibrate(200)
         } else {
             if (data.started === true) {
                 message.success(data.message)
@@ -26,10 +31,10 @@ const Intro = () => {
             }
             setStartTime(Date.parse(data.startTime))
         }
-    }
+    }, [setLoading])
     useEffect(() => {
         checkContest()
-    }, [])
+    }, [checkContest])
     return (
         <div>
             <Title level={3} className="text-center">
@@ -48,7 +53,7 @@ const Intro = () => {
                 <img
                     src="/images/logo.jpeg"
                     alt="logo"
-                    className="max-w-lg lg:mx-auto"
+                    className="lg:mx-auto"
                 />
                 <Link to="/login" className="max-w-xl w-full">
                     <Button className="w-full shadow-md ">Login</Button>

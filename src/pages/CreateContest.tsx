@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { Button, DatePicker, Form, Input } from 'antd'
 import { Typography } from 'antd'
 import { fetchData } from '../utils/fetch'
 import { useNavigate } from 'react-router-dom'
 import { message } from 'antd'
 import moment from 'moment'
+import LoadingContext from '../utils/LoadingContext'
 
 const { Title } = Typography
 type FieldType = {
@@ -19,11 +20,14 @@ const onFinishFailed = (errorInfo: any) => {
 }
 
 const CreateContest: React.FC = () => {
+    const { setLoading } = useContext(LoadingContext)
     const [form] = Form.useForm()
     const navigate = useNavigate()
     const [contestId, setContestId] = useState<string>()
     const loadContest = useCallback(async () => {
+        setLoading(true)
         const data = await fetchData({ path: '/contest/' })
+        setLoading(false)
         const contest: {
             _id: string
             startTime: Date
@@ -40,13 +44,14 @@ const CreateContest: React.FC = () => {
                 time: [moment(contest.startTime), moment(contest.endTime)]
             })
         }
-    }, [form])
+    }, [form, setLoading])
     useEffect(() => {
         loadContest()
     }, [loadContest])
     const onFinish = async (values: any) => {
         let data
-        if (contestId) {
+        setLoading(true)
+        if (contestId === undefined) {
             data = await fetchData({
                 path: '/contest/create',
                 method: 'POST',
@@ -67,9 +72,10 @@ const CreateContest: React.FC = () => {
                 }
             })
         }
+        setLoading(false)
         if (data.success === false) {
             message.error(data.message)
-            navigator.vibrate(300)
+            navigator.vibrate(200)
             return
         }
         message.success(data.message)

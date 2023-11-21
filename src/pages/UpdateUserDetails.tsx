@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect } from 'react'
-import { Button, Form, Input, message, Typography, Checkbox } from 'antd'
+import { Button, Form, Input, message, Typography } from 'antd'
 import { fetchData } from '../utils/fetch'
 import { useNavigate, useParams } from 'react-router-dom'
 import LoadingContext from '../utils/LoadingContext'
@@ -12,17 +12,14 @@ type FieldType = {
     email: string
     usn: string
     phone: string
-    isTeam: boolean
-    isAdmin: boolean
 }
 
 const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo)
 }
 
-const AddUserAdmin: React.FC = () => {
+const UpdateUserDetails: React.FC = () => {
     const { setLoading } = useContext(LoadingContext)
-
     const [form] = Form.useForm()
     const navigate = useNavigate()
     let { id } = useParams()
@@ -31,7 +28,7 @@ const AddUserAdmin: React.FC = () => {
             setLoading(true)
             const data = await fetchData({ path: `/users/${id}` })
             setLoading(false)
-            form.setFieldsValue(data.user)
+            form.setFieldsValue({ ...data.user, password: '' })
         },
         [form, setLoading]
     )
@@ -40,21 +37,18 @@ const AddUserAdmin: React.FC = () => {
     }, [fetchUser, id])
     const onFinish = async (values: any) => {
         console.log('Success:', values)
-        let data
-        setLoading(true)
-        if (id) {
-            data = await fetchData({
-                path: `/users/${id}`,
-                method: 'PUT',
-                body: values
-            })
-        } else {
-            data = await fetchData({
-                path: '/auth/registerTeam',
-                method: 'POST',
-                body: values
-            })
+
+        let val = values
+        if (values.password === '') {
+            delete val['password']
         }
+        setLoading(true)
+        const data = await fetchData({
+            path: `/users/${id}`,
+            method: 'PUT',
+            body: val
+        })
+
         setLoading(false)
         if (data.success === false) {
             message.error(data.message)
@@ -67,7 +61,7 @@ const AddUserAdmin: React.FC = () => {
     }
     return (
         <div className="p-3">
-            <Title level={3}>Create User</Title>
+            <Title level={3}>User Details</Title>
             <Form
                 form={form}
                 name="login"
@@ -97,7 +91,7 @@ const AddUserAdmin: React.FC = () => {
                         }
                     ]}
                 >
-                    <Input />
+                    <Input disabled={true} />
                 </Form.Item>
                 <Form.Item<FieldType>
                     label="Email"
@@ -136,32 +130,15 @@ const AddUserAdmin: React.FC = () => {
                     <Input />
                 </Form.Item>
 
-                <Form.Item<FieldType>
-                    label="Password"
-                    name="password"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Please input your password!'
-                        }
-                    ]}
-                >
-                    <Input />
-                </Form.Item>
-                <Form.Item<FieldType> name="isTeam" valuePropName="checked">
-                    <Checkbox>In LCC Team?</Checkbox>
-                </Form.Item>
-                <Form.Item<FieldType> name="isAdmin" valuePropName="checked">
-                    <Checkbox>Is Admin?</Checkbox>
+                <Form.Item<FieldType> label="Password" name="password">
+                    <Input.Password />
                 </Form.Item>
 
                 <Form.Item>
-                    <Button htmlType="submit">
-                        {id ? 'Update' : 'Create'}
-                    </Button>
+                    <Button htmlType="submit">Update</Button>
                 </Form.Item>
             </Form>
         </div>
     )
 }
-export default AddUserAdmin
+export default UpdateUserDetails

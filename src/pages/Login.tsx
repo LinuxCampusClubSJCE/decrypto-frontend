@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Button, Form, Input } from 'antd'
 import { Typography } from 'antd'
 import { fetchData } from '../utils/fetch'
 import { useNavigate } from 'react-router-dom'
 import { message } from 'antd'
+import LoadingContext from '../utils/LoadingContext'
 
 const { Title } = Typography
 type FieldType = {
@@ -16,9 +17,12 @@ const onFinishFailed = (errorInfo: any) => {
 }
 
 const Login: React.FC = () => {
+    const { setLoading } = useContext(LoadingContext)
+
     const navigate = useNavigate()
     const onFinish = async (values: any) => {
         console.log('Success:', values)
+        setLoading(true)
         const data = await fetchData({
             path: '/auth/login',
             method: 'POST',
@@ -27,15 +31,17 @@ const Login: React.FC = () => {
                 password: values.password
             }
         })
+        setLoading(false)
         if (data.success === false) {
             message.error(data.message)
-            navigator.vibrate(300)
+            navigator.vibrate(200)
             return
         }
         message.success(data.message)
         localStorage.setItem('token', data.accessToken)
         localStorage.setItem('login', 'true')
         localStorage.setItem('user', JSON.stringify(data.user))
+        localStorage.setItem('id', data.user._id)
         navigate('/')
         console.log(data)
     }

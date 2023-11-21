@@ -1,8 +1,9 @@
 import { Table, message } from 'antd'
-import { useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { fetchData } from '../utils/fetch'
 import { CheckOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
+import LoadingContext from '../utils/LoadingContext'
 
 interface user {
     fullname: string
@@ -12,21 +13,27 @@ interface user {
 
 const ListUsers = () => {
     const navigate = useNavigate()
+    const { setLoading } = useContext(LoadingContext)
     const deleteUser = async (id: string) => {
+        setLoading(true)
         const data = await fetchData({
             path: `/users/${id}`,
             method: 'DELETE'
         })
+        setLoading(false)
         loadUsers()
         if (data.success) {
             message.success(data.message)
         } else {
             message.error(data.message)
-            navigator.vibrate(300)
+            navigator.vibrate(200)
         }
     }
     const columns = [
-        { title: 'username', dataIndex: 'username' },
+        {
+            title: 'username',
+            dataIndex: 'username'
+        },
         {
             title: 'no',
             dataIndex: 'solvedQuestions',
@@ -78,14 +85,16 @@ const ListUsers = () => {
             }
         }
     ]
-    const loadUsers = async () => {
+    const loadUsers = useCallback(async () => {
+        setLoading(true)
         const data = await fetchData({ path: '/users/' })
+        setLoading(false)
         setUsers(data.users)
-    }
+    }, [setLoading])
     const [users, setUsers] = useState<user[]>()
     useEffect(() => {
         loadUsers()
-    }, [])
+    }, [loadUsers])
     return (
         <div>
             <Table

@@ -1,8 +1,9 @@
 import { Table, message } from 'antd'
-import { useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { fetchData } from '../utils/fetch'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
+import LoadingContext from '../utils/LoadingContext'
 
 interface question {
     _id: string
@@ -13,18 +14,21 @@ interface question {
 }
 
 const ListQuestions = () => {
+    const { setLoading } = useContext(LoadingContext)
     const navigate = useNavigate()
     const deleteQuestion = async (id: string) => {
+        setLoading(true)
         const data = await fetchData({
             path: `/question/${id}`,
             method: 'DELETE'
         })
+        setLoading(false)
         loadQuestions()
         if (data.success) {
             message.success(data.message)
         } else {
             message.error(data.message)
-            navigator.vibrate(300)
+            navigator.vibrate(200)
         }
     }
     const columns = [
@@ -71,14 +75,16 @@ const ListQuestions = () => {
             }
         }
     ]
-    const loadQuestions = async () => {
+    const loadQuestions = useCallback(async () => {
+        setLoading(true)
         const data = await fetchData({ path: '/question/' })
+        setLoading(false)
         setQuestions(data.questions)
-    }
+    }, [setLoading])
     const [questions, setQuestions] = useState<question[]>()
     useEffect(() => {
         loadQuestions()
-    }, [])
+    }, [loadQuestions])
     return (
         <div>
             <Table

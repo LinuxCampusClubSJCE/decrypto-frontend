@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useContext, useEffect } from 'react'
 import { Button, Form, Input } from 'antd'
 import { Typography } from 'antd'
 import { fetchData } from '../utils/fetch'
 import { useNavigate } from 'react-router-dom'
 import { message } from 'antd'
+import LoadingContext from '../utils/LoadingContext'
 
 const { Title } = Typography
 type FieldType = {
@@ -21,19 +22,24 @@ const onFinishFailed = (errorInfo: any) => {
 
 const Register: React.FC = () => {
     const navigate = useNavigate()
-    const checkStarted = async () => {
+    const { setLoading } = useContext(LoadingContext)
+
+    const checkStarted = useCallback(async () => {
+        setLoading(true)
         const data = await fetchData({
             path: '/auth/registerstarted'
         })
+        setLoading(false)
         if (data.success && data.started === false) {
             message.error('Registration not yet started')
         }
-    }
+    }, [setLoading])
     useEffect(() => {
         checkStarted()
-    }, [])
+    }, [checkStarted])
     const onFinish = async (values: any) => {
         console.log('Success:', values)
+        setLoading(true)
         const data = await fetchData({
             path: '/auth/register',
             method: 'POST',
@@ -41,9 +47,10 @@ const Register: React.FC = () => {
         })
         if (data.success === false) {
             message.error(data.message)
-            navigator.vibrate(300)
+            navigator.vibrate(200)
             return
         }
+        setLoading(false)
         message.success(data.message)
         navigate('/')
         console.log(data)
