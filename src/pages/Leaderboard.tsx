@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { fetchData } from '../utils/fetch'
-import { List, Table } from 'antd'
+import { Table } from 'antd'
 
 interface leaderboardType {
     rank: number

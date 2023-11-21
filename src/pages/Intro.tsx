@@ -1,5 +1,4 @@
 import { Button, Flex, message } from 'antd'
-import Countdown from 'react-countdown'
 import { Link } from 'react-router-dom'
 import { Typography } from 'antd'
 import { useEffect, useState } from 'react'

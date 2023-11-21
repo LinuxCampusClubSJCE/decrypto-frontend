@@ -1,7 +1,7 @@
 import { Table, message } from 'antd'
 import { useEffect, useState } from 'react'
 import { fetchData } from '../utils/fetch'
-import { CheckOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 
 interface question {

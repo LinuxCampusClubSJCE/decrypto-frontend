@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Button, Form, Input, Rate, Upload } from 'antd'
 import { Typography } from 'antd'
 import { fetchData } from '../utils/fetch'

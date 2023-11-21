@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Button, DatePicker, Form, Input } from 'antd'
 import { Typography } from 'antd'
 import { fetchData } from '../utils/fetch'
@@ -22,7 +22,7 @@ const CreateContest: React.FC = () => {
     const [form] = Form.useForm()
     const navigate = useNavigate()
     const [contestId, setContestId] = useState<string>()
-    const loadContest = async () => {
+    const loadContest = useCallback(async () => {
         const data = await fetchData({ path: '/contest/' })
         const contest: {
             _id: string
@@ -40,10 +40,10 @@ const CreateContest: React.FC = () => {
                 time: [moment(contest.startTime), moment(contest.endTime)]
             })
         }
-    }
+    }, [form])
     useEffect(() => {
         loadContest()
-    }, [])
+    }, [loadContest])
     const onFinish = async (values: any) => {
         let data
         if (contestId) {

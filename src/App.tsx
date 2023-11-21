@@ -1,9 +1,4 @@
-import {
-    BrowserRouter as Router,
-    Routes,
-    Route,
-    useNavigate
-} from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Login from './pages/Login'
 import Home from './pages/Home'
 import Navbar from './components/Navbar'
@@ -11,8 +6,7 @@ import Rules from './pages/Rules'
 import Register from './pages/Register'
 import Leaderboard from './pages/Leaderboard'
 import Logout from './pages/Logout'
-import { ConfigProvider, message, theme } from 'antd'
-import Play from './pages/Play'
+import { ConfigProvider, theme } from 'antd'
 import AddUserAdmin from './pages/AddUserAdmin'
 import { useEffect } from 'react'
 import { fetchData } from './utils/fetch'

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 const CountdownTimer = ({
     futureTimestamp,
@@ -7,7 +7,7 @@ const CountdownTimer = ({
     futureTimestamp: number
     onComplete: () => void
 }) => {
-    const calculateTimeLeft = () => {
+    const calculateTimeLeft = useCallback(() => {
         const difference = futureTimestamp - new Date().getTime()
         if (difference <= 0) {
             onComplete()
@@ -27,7 +27,7 @@ const CountdownTimer = ({
             minutes: minutes < 10 ? `0${minutes}` : minutes,
             seconds: seconds < 10 ? `0${seconds}` : seconds
         }
-    }
+    }, [onComplete, futureTimestamp])
 
     const [timeLeft, setTimeLeft] = useState(calculateTimeLeft())
 
@@ -37,7 +37,7 @@ const CountdownTimer = ({
         }, 1000)
 
         return () => clearInterval(timer)
-    }, [futureTimestamp])
+    }, [futureTimestamp, calculateTimeLeft])
 
     return (
         <div className="font-thin">
