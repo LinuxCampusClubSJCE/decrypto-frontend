@@ -19,6 +19,13 @@ const Admin = () => {
             >
                 Create New User
             </Button>
+            <Button
+                onClick={() => {
+                    navigate('/arrange')
+                }}
+            >
+                Arrange Question
+            </Button>
 
             <ListUsers />
         </div>

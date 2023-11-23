@@ -15,6 +15,7 @@ import CreateContest from './pages/CreateContest'
 import LoadingContext from './utils/LoadingContext'
 import { PropagateLoader } from 'react-spinners'
 import UpdateUserDetails from './pages/UpdateUserDetails'
+import ArrangeQuestions from './components/ArrangeQuestions'
 function App() {
     const checkLogin = async () => {
         if (localStorage.getItem('login') === 'true') {
@@ -66,6 +67,7 @@ function App() {
                             path="/createcontest"
                             element={<CreateContest />}
                         />
+                        <Route path="/arrange" element={<ArrangeQuestions />} />
                         {/* Team */}
                         <Route
                             path="/addquestion/"
