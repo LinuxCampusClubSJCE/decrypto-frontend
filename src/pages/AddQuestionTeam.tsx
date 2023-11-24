@@ -14,6 +14,9 @@ type FieldType = {
     answer: string
     hint: string
     difficulty: number
+    showedHint: string
+    rating: number
+    rateCount: number
 }
 const getBase64 = (img: RcFile, callback: (url: string) => void) => {
     console.log({ img })
@@ -88,12 +91,13 @@ const beforeUpload = (file: RcFile) => {
 const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo)
 }
-const AddQuestionTeam = () => {
+const AddQuestionTeam = ({ isAdmin }: { isAdmin?: boolean }) => {
     const { setLoading } = useContext(LoadingContext)
     const [imageLoading, setImageLoading] = useState(false)
     const [form] = Form.useForm()
     const navigate = useNavigate()
     let { id } = useParams()
+
     const fetchUser = useCallback(
         async (id: string) => {
             setLoading(true)
@@ -234,6 +238,31 @@ const AddQuestionTeam = () => {
                 <Form.Item<FieldType> label="Hint" name="hint">
                     <Input />
                 </Form.Item>
+                {isAdmin && (
+                    <>
+                        <Form.Item<FieldType>
+                            label="Showed Hint"
+                            name="showedHint"
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item<FieldType>
+                            label="Rating Int()"
+                            name="rating"
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item<FieldType> label="Rating" name="rating">
+                            <Rate allowHalf />
+                        </Form.Item>
+                        <Form.Item<FieldType>
+                            label="Rate Count"
+                            name="rateCount"
+                        >
+                            <Input />
+                        </Form.Item>
+                    </>
+                )}
                 <Form.Item<FieldType> label="Difficulty" name="difficulty">
                     <Rate
                         tooltips={[

@@ -216,7 +216,7 @@ const DropList = ({
                                                     />
                                                 </div>
                                                 <Link
-                                                    to={`/addquestion/${question._id}`}
+                                                    to={`/editquestionadmin/${question._id}`}
                                                 >
                                                     <Button>Edit</Button>
                                                 </Link>

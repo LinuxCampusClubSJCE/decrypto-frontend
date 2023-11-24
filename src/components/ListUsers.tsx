@@ -35,6 +35,12 @@ const ListUsers = () => {
             dataIndex: 'username'
         },
         {
+            title: 'Name',
+            dataIndex: 'fullName',
+            width: 100,
+            ellipsis: true
+        },
+        {
             title: 'no',
             dataIndex: 'solvedQuestions',
             width: 50,
@@ -43,7 +49,7 @@ const ListUsers = () => {
         {
             title: 'Edit',
             dataIndex: '_id',
-            width: 60,
+            width: 50,
             ellipsis: true,
             render: (_id: string) => {
                 return (
@@ -56,7 +62,7 @@ const ListUsers = () => {
         {
             title: 'Delete',
             dataIndex: '_id',
-            width: 60,
+            width: 50,
             ellipsis: true,
             render: (_id: string) => {
                 return (

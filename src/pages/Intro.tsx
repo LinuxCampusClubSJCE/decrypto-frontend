@@ -1,5 +1,5 @@
 import { Button, Flex, message } from 'antd'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Typography } from 'antd'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { fetchData } from '../utils/fetch'
@@ -14,7 +14,7 @@ import LoadingContext from '../utils/LoadingContext'
 const { Title } = Typography
 const Intro = () => {
     const { setLoading } = useContext(LoadingContext)
-
+    const navigate = useNavigate()
     const [startTime, setStartTime] = useState<number>(0)
     const checkContest = useCallback(async () => {
         setLoading(true)
@@ -40,7 +40,9 @@ const Intro = () => {
             <Title level={3} className="text-center">
                 <CountdownTimer
                     futureTimestamp={startTime}
-                    onComplete={() => {}}
+                    onComplete={() => {
+                        navigate('/')
+                    }}
                 />
             </Title>
             <Flex

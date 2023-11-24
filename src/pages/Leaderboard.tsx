@@ -32,11 +32,19 @@ const Leaderboard = () => {
         const data = await fetchData({ path: '/users/leaderboard' })
         setLoading(false)
         if (data.success) {
+            let lastVal =
+                data.leaderboard.length !== 0 &&
+                data.leaderboard[0].solvedQuestions
+            let rank = 1
             const leaderboardData = data.leaderboard.map(
-                (item: leaderboardType, index: number) => {
+                (item: leaderboardType) => {
+                    if (lastVal !== item.solvedQuestions) {
+                        lastVal = item.solvedQuestions
+                        rank++
+                    }
                     return {
                         ...item,
-                        rank: index + 1
+                        rank
                     }
                 }
             )

@@ -43,7 +43,7 @@ function App() {
                 }}
             >
                 {isLoading && (
-                    <div className="fixed flex items-center justify-center z-10 top-0 left-0 h-screen w-screen bg-slate-800 bg-opacity-30 backdrop-blur-sm">
+                    <div className="fixed flex items-center justify-center z-30 top-0 left-0 h-screen w-screen bg-slate-800 bg-opacity-30 backdrop-blur-sm">
                         <PropagateLoader color="white" />
                     </div>
                 )}
@@ -62,6 +62,10 @@ function App() {
                         />
                         {/* Admin */}
                         <Route path="/adduser" element={<AddUserAdmin />} />
+                        <Route
+                            path="/editquestionadmin/:id"
+                            element={<AddQuestionTeam isAdmin={true} />}
+                        />
                         <Route path="/adduser/:id" element={<AddUserAdmin />} />
                         <Route
                             path="/createcontest"

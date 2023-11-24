@@ -56,6 +56,7 @@ const UpdateUserDetails: React.FC = () => {
             return
         } else {
             message.success(data.message)
+            // localStorage.setItem('user', JSON.stringify(data.user))
             navigate(-1)
         }
     }
