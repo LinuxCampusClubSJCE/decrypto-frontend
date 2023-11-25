@@ -91,7 +91,9 @@ const ListQuestions = () => {
                 className="max-w-full"
                 size="small"
                 columns={columns}
-                dataSource={questions}
+                dataSource={questions?.map((val) => {
+                    return { ...val, key: val._id }
+                })}
                 bordered={true}
             />
         </div>

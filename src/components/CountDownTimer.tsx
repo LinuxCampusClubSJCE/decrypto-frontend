@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useRef } from 'react'
 
 const CountdownTimer = ({
     futureTimestamp,
@@ -7,10 +7,14 @@ const CountdownTimer = ({
     futureTimestamp: number
     onComplete: () => void
 }) => {
+    const timer = useRef<NodeJS.Timer>()
+    const [completed, setCompleted] = useState(false)
     const calculateTimeLeft = useCallback(() => {
         const difference = futureTimestamp - new Date().getTime()
         if (difference <= 0) {
             onComplete()
+            setCompleted(true)
+            clearInterval(timer.current)
             return {
                 hours: '00',
                 minutes: '00',
@@ -29,19 +33,25 @@ const CountdownTimer = ({
         }
     }, [onComplete, futureTimestamp])
 
-    const [timeLeft, setTimeLeft] = useState(calculateTimeLeft())
+    const [timeLeft, setTimeLeft] = useState(calculateTimeLeft)
 
     useEffect(() => {
-        const timer = setInterval(() => {
+        timer.current = setInterval(() => {
             setTimeLeft(calculateTimeLeft())
         }, 1000)
 
-        return () => clearInterval(timer)
-    }, [futureTimestamp, calculateTimeLeft])
+        return () => clearInterval(timer.current)
+    }, [calculateTimeLeft])
 
     return (
         <div className="font-thin">
-            {timeLeft.hours}:{timeLeft.minutes}:{timeLeft.seconds}
+            {completed ? (
+                <>🐧 Contest is Live 🎉</>
+            ) : (
+                <>
+                    {timeLeft.hours}:{timeLeft.minutes}:{timeLeft.seconds}
+                </>
+            )}
         </div>
     )
 }

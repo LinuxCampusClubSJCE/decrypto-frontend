@@ -11,6 +11,7 @@ interface Question {
     answer: string
     rating: number
     rateCount: number
+    ansCount: number
 }
 type FieldType = {
     answer: string
@@ -26,6 +27,7 @@ const Play = () => {
     const [form] = Form.useForm()
     const inputRef = useRef<InputRef>(null)
     const [completed, setCompleted] = useState(false)
+    const ansCount = useRef(Number(localStorage.getItem('ansCount') || 0))
     const [validateStatus, setValidateStatus] = useState<'success' | 'error'>(
         'success'
     )
@@ -56,6 +58,8 @@ const Play = () => {
         const answer = modifyString(values.answer)
         console.log(values.answer, answer, question.answer, Md5.hashStr(answer))
         if (Md5.hashStr(answer) !== question.answer) {
+            ansCount.current++
+            localStorage.setItem('ansCount', String(ansCount.current))
             inputRef.current?.input?.classList.add('apply-shake')
             navigator.vibrate(100)
             setValidateStatus('error')
@@ -85,15 +89,19 @@ const Play = () => {
             method: 'POST',
             body: {
                 answer,
-                rate: rating
+                rate: rating,
+                ansCount: localStorage.getItem('ansCount')
             }
         })
         if (data.success === 'false') {
             message.error(data.message)
+        } else {
+            localStorage.setItem('ansCount', '0')
+            ansCount.current = 0
+            loadQuestion()
         }
         setIsModalOpen(false)
         setLoading(false)
-        loadQuestion()
     }
     return (
         <div>
@@ -125,10 +133,17 @@ const Play = () => {
                     </Card>
                 </div>
             )}
+            {!completed && !question && (
+                <div className="text-xl flex items-center justify-center h-screen">
+                    Contest Not Yet Started... ⏳
+                </div>
+            )}
             {question && (
-                <div className="flex flex-col items-center space-y-1">
-                    <div className="text-2xl font-normal text-center">
-                        Question {question.no}
+                <div className="flex flex-col items-center space-y-1 text-center">
+                    <div className="space-y-2 mb-8">
+                        <div className="text-2xl text-center">
+                            Question {question.no}
+                        </div>
                         <div className="text-sm flex items-center mt-1">
                             <Rate
                                 allowHalf
@@ -136,8 +151,18 @@ const Play = () => {
                                 disabled
                                 className="px-2"
                             />
-                            {question.rating.toFixed(2) || 0}(
+                            {question.rating.toFixed(1) || 0}(
                             {question.rateCount || 0})
+                        </div>
+                        <div className="text-sm">
+                            {question.ansCount !== 0 ? (
+                                <>
+                                    Avg Attempts to solve:{' '}
+                                    {question.ansCount.toFixed(1)}
+                                </>
+                            ) : (
+                                'Be the first to crack it'
+                            )}
                         </div>
                     </div>
 
@@ -168,10 +193,17 @@ const Play = () => {
                                 }
                             ]}
                         >
-                            <Input placeholder="Answer..." ref={inputRef} />
+                            <Input
+                                placeholder="Answer..."
+                                ref={inputRef}
+                                autoComplete="off"
+                            />
                         </Form.Item>
                         <Form.Item className="flex items-center justify-center">
-                            <Button htmlType="submit" className="px-5">
+                            <Button
+                                htmlType="submit"
+                                className="px-5 shadow-md"
+                            >
                                 Check
                             </Button>
                         </Form.Item>

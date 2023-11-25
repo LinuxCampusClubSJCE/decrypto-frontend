@@ -6,9 +6,10 @@ import { useNavigate } from 'react-router-dom'
 import LoadingContext from '../utils/LoadingContext'
 
 interface user {
-    fullname: string
+    fullName: string
     username: string
     _id: string
+    solvedQuestions: number
 }
 
 const ListUsers = () => {
@@ -32,19 +33,23 @@ const ListUsers = () => {
     const columns = [
         {
             title: 'username',
-            dataIndex: 'username'
+            dataIndex: 'username',
+            sorter: (a: user, b: user) =>
+                a.username > b.username ? 1 : b.username > a.username ? -1 : 0
         },
         {
             title: 'Name',
             dataIndex: 'fullName',
-            width: 100,
-            ellipsis: true
+            ellipsis: true,
+            sorter: (a: user, b: user) =>
+                a.fullName > b.fullName ? 1 : b.fullName > a.fullName ? -1 : 0
         },
         {
             title: 'no',
             dataIndex: 'solvedQuestions',
             width: 50,
-            ellipsis: true
+            ellipsis: true,
+            sorter: (a: user, b: user) => a.solvedQuestions - b.solvedQuestions
         },
         {
             title: 'Edit',
@@ -107,7 +112,9 @@ const ListUsers = () => {
                 className="max-w-full"
                 size="small"
                 columns={columns}
-                dataSource={users}
+                dataSource={users?.map((val) => {
+                    return { ...val, key: val._id }
+                })}
                 bordered={true}
             />
         </div>

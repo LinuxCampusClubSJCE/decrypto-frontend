@@ -1,5 +1,5 @@
-import { Button } from 'antd'
 import { Link } from 'react-router-dom'
+import { Button } from 'antd'
 import ListQuestions from '../components/ListQuestions'
 
 const Team = () => {
@@ -16,6 +16,7 @@ const Team = () => {
             <Link to={'/details/' + userId} className="flex justify-center p-3">
                 <Button>Update Profile</Button>
             </Link>
+
             <Link to="/addquestion" className="flex justify-center p-3">
                 <Button>Add New Question</Button>
             </Link>

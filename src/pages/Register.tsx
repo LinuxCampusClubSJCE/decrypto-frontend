@@ -38,7 +38,6 @@ const Register: React.FC = () => {
         checkStarted()
     }, [checkStarted])
     const onFinish = async (values: any) => {
-        console.log('Success:', values)
         setLoading(true)
         const data = await fetchData({
             path: '/auth/register',
@@ -53,7 +52,6 @@ const Register: React.FC = () => {
         setLoading(false)
         message.success(data.message)
         navigate('/')
-        console.log(data)
     }
     return (
         <div className="p-3">
@@ -73,7 +71,7 @@ const Register: React.FC = () => {
                         }
                     ]}
                 >
-                    <Input />
+                    <Input autoComplete="name" />
                 </Form.Item>
                 <Form.Item<FieldType>
                     label="Username"
@@ -85,7 +83,7 @@ const Register: React.FC = () => {
                         }
                     ]}
                 >
-                    <Input />
+                    <Input autoComplete="username" />
                 </Form.Item>
                 <Form.Item<FieldType>
                     label="Email"
@@ -97,7 +95,7 @@ const Register: React.FC = () => {
                         }
                     ]}
                 >
-                    <Input type="email" />
+                    <Input type="email" autoComplete="email" />
                 </Form.Item>
                 <Form.Item<FieldType>
                     label="USN"
@@ -109,7 +107,7 @@ const Register: React.FC = () => {
                         }
                     ]}
                 >
-                    <Input />
+                    <Input autoComplete="off" />
                 </Form.Item>
                 <Form.Item<FieldType>
                     label="Phone No"
@@ -121,7 +119,7 @@ const Register: React.FC = () => {
                         }
                     ]}
                 >
-                    <Input />
+                    <Input autoComplete="tel" />
                 </Form.Item>
 
                 <Form.Item<FieldType>
@@ -134,7 +132,7 @@ const Register: React.FC = () => {
                         }
                     ]}
                 >
-                    <Input.Password />
+                    <Input.Password autoComplete="new-password" />
                 </Form.Item>
 
                 <Form.Item>

@@ -40,9 +40,7 @@ const Intro = () => {
             <Title level={3} className="text-center">
                 <CountdownTimer
                     futureTimestamp={startTime}
-                    onComplete={() => {
-                        navigate('/')
-                    }}
+                    onComplete={() => {}}
                 />
             </Title>
             <Flex
@@ -57,12 +55,22 @@ const Intro = () => {
                     alt="logo"
                     className="lg:mx-auto"
                 />
-                <Link to="/login" className="max-w-xl w-full">
-                    <Button className="w-full shadow-md ">Login</Button>
-                </Link>
-                <Link to="/register" className="max-w-xl w-full">
-                    <Button className="w-full shadow-md">Register</Button>
-                </Link>
+                <Button
+                    onClick={() => {
+                        navigate('/login')
+                    }}
+                    className="w-full max-w-xl shadow-md "
+                >
+                    Login
+                </Button>
+                <Button
+                    onClick={() => {
+                        navigate('/register')
+                    }}
+                    className="w-full max-w-xl shadow-md"
+                >
+                    Register
+                </Button>
             </Flex>
             <div className="flex p-2 py-4 flex-col  justify-center bg-slate-900 font-extralight text-zinc-200">
                 <div className="text-center mb-3">Linux Campus Club</div>

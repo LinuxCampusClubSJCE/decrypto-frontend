@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { Button, DatePicker, Form, Input } from 'antd'
+import { Button, Checkbox, DatePicker, Form, Input, Select } from 'antd'
 import { Typography } from 'antd'
 import { fetchData } from '../utils/fetch'
 import { useNavigate } from 'react-router-dom'
@@ -13,6 +13,9 @@ type FieldType = {
     name: string
     questionOrder: Array<string>
     time: Date[]
+    allowRegistration: boolean
+    allowQuestionModify: boolean
+    forceState: 'start' | 'stop' | ''
 }
 
 const onFinishFailed = (errorInfo: any) => {
@@ -34,6 +37,9 @@ const CreateContest: React.FC = () => {
             endTime: Date
             questionOrder: Array<string>
             name: string
+            allowRegistration: boolean
+            allowQuestionModify: boolean
+            forceState: 'start' | 'stop' | ''
         } = data.contest
         if (data.success === true) {
             setContestId(data.contest._id)
@@ -41,35 +47,39 @@ const CreateContest: React.FC = () => {
                 name: contest.name,
                 _id: contest._id,
                 questionOrder: contest.questionOrder,
-                time: [moment(contest.startTime), moment(contest.endTime)]
+                time: [moment(contest.startTime), moment(contest.endTime)],
+                allowRegistration: contest.allowRegistration,
+                allowQuestionModify: contest.allowQuestionModify,
+                forceState: contest.forceState
             })
         }
     }, [form, setLoading])
     useEffect(() => {
         loadContest()
     }, [loadContest])
-    const onFinish = async (values: any) => {
+    const onFinish = async (values: FieldType) => {
         let data
         setLoading(true)
+        console.log(values)
+        const body = {
+            name: values.name,
+            startTime: values.time[0],
+            endTime: values.time[1],
+            allowRegistration: values.allowRegistration,
+            allowQuestionModify: values.allowQuestionModify,
+            forceState: values.forceState
+        }
         if (contestId === undefined) {
             data = await fetchData({
                 path: '/contest/create',
                 method: 'POST',
-                body: {
-                    name: values.name,
-                    startTime: values.time[0],
-                    endTime: values.time[1]
-                }
+                body
             })
         } else {
             data = await fetchData({
-                path: '/contest/' + contestId,
+                path: '/contest/update/' + contestId,
                 method: 'PUT',
-                body: {
-                    name: values.name,
-                    startTime: values.time[0],
-                    endTime: values.time[1]
-                }
+                body
             })
         }
         setLoading(false)
@@ -109,7 +119,7 @@ const CreateContest: React.FC = () => {
                     rules={[
                         {
                             required: true,
-                            message: 'Please input your password!'
+                            message: 'Please input Time!'
                         }
                     ]}
                 >
@@ -119,8 +129,32 @@ const CreateContest: React.FC = () => {
                     />
                 </Form.Item>
 
+                <Form.Item<FieldType>
+                    label="Start Registration"
+                    name="allowRegistration"
+                    valuePropName="checked"
+                >
+                    <Checkbox />
+                </Form.Item>
+                <Form.Item<FieldType>
+                    label="Allow Team To Modify Questions"
+                    name="allowQuestionModify"
+                    valuePropName="checked"
+                >
+                    <Checkbox />
+                </Form.Item>
+                <Form.Item<FieldType> label="Force State" name="forceState">
+                    <Select>
+                        <Select.Option value="">Nothing</Select.Option>
+                        <Select.Option value="start">Start</Select.Option>
+                        <Select.Option value="stop">Stop</Select.Option>
+                    </Select>
+                </Form.Item>
+
                 <Form.Item>
-                    <Button htmlType="submit">Create</Button>
+                    <Button htmlType="submit">
+                        {contestId ? 'Update' : 'Create'}
+                    </Button>
                 </Form.Item>
             </Form>
         </div>

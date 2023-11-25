@@ -2,21 +2,27 @@ import { useCallback, useContext, useEffect, useState } from 'react'
 import { fetchData } from '../utils/fetch'
 import { Table } from 'antd'
 import LoadingContext from '../utils/LoadingContext'
+import { ColumnsType } from 'antd/es/table'
 
 interface leaderboardType {
+    _id: string
     rank: number
     username: string
     solvedQuestions: number
 }
 
-const columns = [
+const columns: ColumnsType<leaderboardType> = [
     {
         title: 'Rank',
-        dataIndex: 'rank'
+        dataIndex: 'rank',
+        sorter: (a: leaderboardType, b: leaderboardType) => a.rank - b.rank,
+        defaultSortOrder: 'ascend'
     },
     {
         title: 'Username',
-        dataIndex: 'username'
+        dataIndex: 'username',
+        sorter: (a: leaderboardType, b: leaderboardType) =>
+            a.username > b.username ? 1 : b.username > a.username ? -1 : 0
     },
     {
         title: 'Question',
@@ -56,9 +62,37 @@ const Leaderboard = () => {
         loadData()
     }, [loadData])
     const [leaderboard, setLeaderboard] = useState<leaderboardType[]>([])
+    let user = localStorage.getItem('user')
+    let userObj: {
+        _id: string
+        fullName: string
+        username: string
+        email: string
+    } | null = null
+    let userRank = -1
+    if (user !== null) {
+        userObj = JSON.parse(user)
+        const userInd = leaderboard.findIndex((i) => i._id === userObj?._id)
+        if (userInd !== -1) {
+            userRank = leaderboard[userInd].rank
+        }
+    }
     return (
         <div>
-            <Table columns={columns} dataSource={leaderboard} className="p-3" />
+            {userObj !== null && (
+                <div className="text-center space-y-1 mt-2 shadow-lg p-2 bg-slate-200 w-[80%] max-w-xl mx-auto rounded-lg">
+                    <p>Rank: {userRank}</p>
+                    <p>Name: {userObj.fullName}</p>
+                    <p>username: {userObj.username}</p>
+                </div>
+            )}
+            <Table
+                columns={columns}
+                dataSource={leaderboard.map((val) => {
+                    return { ...val, key: val._id }
+                })}
+                className="p-3"
+            />
         </div>
     )
 }

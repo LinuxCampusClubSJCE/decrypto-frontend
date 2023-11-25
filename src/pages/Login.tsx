@@ -21,7 +21,6 @@ const Login: React.FC = () => {
 
     const navigate = useNavigate()
     const onFinish = async (values: any) => {
-        console.log('Success:', values)
         setLoading(true)
         const data = await fetchData({
             path: '/auth/login',
@@ -43,7 +42,6 @@ const Login: React.FC = () => {
         localStorage.setItem('user', JSON.stringify(data.user))
         localStorage.setItem('id', data.user._id)
         navigate('/')
-        console.log(data)
     }
     return (
         <div className="p-3">
@@ -63,7 +61,7 @@ const Login: React.FC = () => {
                         }
                     ]}
                 >
-                    <Input />
+                    <Input autoComplete="email" />
                 </Form.Item>
 
                 <Form.Item<FieldType>
@@ -76,7 +74,7 @@ const Login: React.FC = () => {
                         }
                     ]}
                 >
-                    <Input.Password />
+                    <Input.Password autoComplete="current-password" />
                 </Form.Item>
 
                 <Form.Item>

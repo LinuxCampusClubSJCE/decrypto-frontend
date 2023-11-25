@@ -36,8 +36,6 @@ const UpdateUserDetails: React.FC = () => {
         if (id) fetchUser(id)
     }, [fetchUser, id])
     const onFinish = async (values: any) => {
-        console.log('Success:', values)
-
         let val = values
         if (values.password === '') {
             delete val['password']
@@ -80,7 +78,7 @@ const UpdateUserDetails: React.FC = () => {
                         }
                     ]}
                 >
-                    <Input />
+                    <Input autoComplete="name" />
                 </Form.Item>
                 <Form.Item<FieldType>
                     label="Username"
@@ -92,7 +90,7 @@ const UpdateUserDetails: React.FC = () => {
                         }
                     ]}
                 >
-                    <Input disabled={true} />
+                    <Input disabled={true} autoComplete="username" />
                 </Form.Item>
                 <Form.Item<FieldType>
                     label="Email"
@@ -104,7 +102,7 @@ const UpdateUserDetails: React.FC = () => {
                         }
                     ]}
                 >
-                    <Input type="email" />
+                    <Input type="email" autoComplete="email" />
                 </Form.Item>
                 <Form.Item<FieldType>
                     label="USN"
@@ -116,7 +114,7 @@ const UpdateUserDetails: React.FC = () => {
                         }
                     ]}
                 >
-                    <Input />
+                    <Input autoComplete="off" />
                 </Form.Item>
                 <Form.Item<FieldType>
                     label="Phone No"
@@ -128,11 +126,11 @@ const UpdateUserDetails: React.FC = () => {
                         }
                     ]}
                 >
-                    <Input />
+                    <Input autoComplete="tel" />
                 </Form.Item>
 
                 <Form.Item<FieldType> label="Password" name="password">
-                    <Input.Password />
+                    <Input.Password autoComplete="new-password" />
                 </Form.Item>
 
                 <Form.Item>

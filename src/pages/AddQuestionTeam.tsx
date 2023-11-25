@@ -16,10 +16,10 @@ type FieldType = {
     difficulty: number
     showedHint: string
     rating: number
+    ansCount: number
     rateCount: number
 }
 const getBase64 = (img: RcFile, callback: (url: string) => void) => {
-    console.log({ img })
     const reader = new FileReader()
     reader.addEventListener('load', () => callback(reader.result as string))
     reader.readAsDataURL(img)
@@ -120,7 +120,7 @@ const AddQuestionTeam = ({ isAdmin }: { isAdmin?: boolean }) => {
         })
         setLoading(false)
         if (data.success && data.allowed === false) {
-            message.error('Registration not yet started')
+            message.error("Can't Modify the Question Now, Ask Admin!")
         }
     }, [setLoading])
 
@@ -130,7 +130,6 @@ const AddQuestionTeam = ({ isAdmin }: { isAdmin?: boolean }) => {
     }, [checkStarted, fetchUser, id])
 
     const onFinish = async (values: any) => {
-        console.log('Success:', values)
         let data
         setLoading(true)
         if (id) {
@@ -175,6 +174,40 @@ const AddQuestionTeam = ({ isAdmin }: { isAdmin?: boolean }) => {
 
     return (
         <div className="p-3">
+            <Form
+                name="checkans"
+                onFinish={async (values) => {
+                    const answer = values.answer
+                        .replace(/\s+/g, '')
+                        .toLowerCase()
+                    const data = await fetchData({
+                        path: `/question/exist/${answer}`
+                    })
+                    if (data.exist === true) {
+                        message.error(
+                            'Question Already Uploaded by Someone else'
+                        )
+                    } else {
+                        message.success('Be the first one to upload')
+                    }
+                }}
+            >
+                <Form.Item<FieldType>
+                    label="Check For Existing Question"
+                    name="answer"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please input the Answer!'
+                        }
+                    ]}
+                >
+                    <Input placeholder="Answer..." />
+                </Form.Item>
+                <Form.Item>
+                    <Button htmlType="submit">Check</Button>
+                </Form.Item>
+            </Form>
             <Title level={3}>New Question</Title>
             <Form
                 form={form}
@@ -261,9 +294,24 @@ const AddQuestionTeam = ({ isAdmin }: { isAdmin?: boolean }) => {
                         >
                             <Input />
                         </Form.Item>
+                        <Form.Item<FieldType>
+                            label="Avg Attempts"
+                            name="ansCount"
+                        >
+                            <Input />
+                        </Form.Item>
                     </>
                 )}
-                <Form.Item<FieldType> label="Difficulty" name="difficulty">
+                <Form.Item<FieldType>
+                    label="Difficulty"
+                    name="difficulty"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please mention its difficulty!'
+                        }
+                    ]}
+                >
                     <Rate
                         tooltips={[
                             'Very Easy',
@@ -276,7 +324,7 @@ const AddQuestionTeam = ({ isAdmin }: { isAdmin?: boolean }) => {
                 </Form.Item>
 
                 <Form.Item>
-                    <Button htmlType="submit">{id ? 'Update' : 'add'}</Button>
+                    <Button htmlType="submit">{id ? 'Update' : 'Add'}</Button>
                 </Form.Item>
             </Form>
         </div>

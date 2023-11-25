@@ -14,6 +14,7 @@ type FieldType = {
     phone: string
     isTeam: boolean
     isAdmin: boolean
+    solvedQuestions: number
 }
 
 const onFinishFailed = (errorInfo: any) => {
@@ -22,7 +23,6 @@ const onFinishFailed = (errorInfo: any) => {
 
 const AddUserAdmin: React.FC = () => {
     const { setLoading } = useContext(LoadingContext)
-
     const [form] = Form.useForm()
     const navigate = useNavigate()
     let { id } = useParams()
@@ -31,7 +31,7 @@ const AddUserAdmin: React.FC = () => {
             setLoading(true)
             const data = await fetchData({ path: `/users/${id}` })
             setLoading(false)
-            form.setFieldsValue(data.user)
+            form.setFieldsValue({ ...data.user, password: '' })
         },
         [form, setLoading]
     )
@@ -39,8 +39,11 @@ const AddUserAdmin: React.FC = () => {
         if (id) fetchUser(id)
     }, [fetchUser, id])
     const onFinish = async (values: any) => {
-        console.log('Success:', values)
         let data
+        let val = values
+        if (values.password === '') {
+            delete val['password']
+        }
         setLoading(true)
         if (id) {
             data = await fetchData({
@@ -136,17 +139,14 @@ const AddUserAdmin: React.FC = () => {
                     <Input />
                 </Form.Item>
 
-                <Form.Item<FieldType>
-                    label="Password"
-                    name="password"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Please input your password!'
-                        }
-                    ]}
-                >
+                <Form.Item<FieldType> label="Password" name="password">
                     <Input />
+                </Form.Item>
+                <Form.Item<FieldType>
+                    label="Solved Questions"
+                    name="solvedQuestions"
+                >
+                    <Input type="number" defaultValue={0} />
                 </Form.Item>
                 <Form.Item<FieldType> name="isTeam" valuePropName="checked">
                     <Checkbox>In LCC Team?</Checkbox>
