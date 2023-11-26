@@ -94,8 +94,8 @@ const Play = () => {
         const answer = modifyString(values.answer)
         console.log(values.answer, answer, question.answer, Md5.hashStr(answer))
         avgAttempts.current++
+        localStorage.setItem('avgAttempts', String(avgAttempts.current))
         if (Md5.hashStr(answer) !== question.answer) {
-            localStorage.setItem('avgAttempts', String(avgAttempts.current))
             inputRef.current?.input?.classList.add('apply-shake')
             navigator.vibrate(100)
             setValidateStatus('error')
