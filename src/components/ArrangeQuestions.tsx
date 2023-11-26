@@ -6,15 +6,28 @@ import {
     DragDropContext
 } from '@hello-pangea/dnd'
 import { fetchData } from '../utils/fetch'
-import { Button, List, Rate, message } from 'antd'
+import { Button, Layout, List, Rate, Typography, message } from 'antd'
 import { Link } from 'react-router-dom'
 import LoadingContext from '../utils/LoadingContext'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
+const { Text, Paragraph } = Typography
+enum QuestionCategory {
+    Other = 'Other',
+    Technical = 'Technical',
+    Movie = 'Movie',
+    Music = 'Music',
+    Celebrity = 'Celebrity',
+    Sports = 'Sports',
+    Place = 'Place',
+    Brand = 'Brand',
+    Food = 'Food'
+}
 interface Question {
     _id: string
     image: string
     answer: string
     difficulty: number
+    category: QuestionCategory
     creator: {
         fullName: string
         username: string
@@ -187,6 +200,7 @@ const ArrangeQuestions: React.FC = () => {
     return (
         <div>
             <Button
+                className="block my-2 mx-auto"
                 onClick={() => {
                     setSelectedQuestions(originalSelectedQuestions)
                     setRemainingQuestions(originalRemainingQuestions)
@@ -196,7 +210,7 @@ const ArrangeQuestions: React.FC = () => {
             </Button>
             <DragDropContext onDragEnd={onDragEnd}>
                 <div className="lg:flex">
-                    <div className="flex-1 px-4 py-2 bg-green-50 min-h-[250px] m-5 rounded-lg shadow-md">
+                    <div className="flex-1 lg:px-4 py-2 bg-green-50 min-h-[250px] lg:m-5 rounded-lg shadow-md">
                         <div className="flex flex-col space-y-4">
                             <Button
                                 onClick={() => {
@@ -244,7 +258,7 @@ const ArrangeQuestions: React.FC = () => {
                             onDelete={deleteQuestion}
                         />
                     </div>
-                    <div className="flex-1 px-4 py-2 bg-red-50 min-h-[250px] m-5 rounded-lg shadow-md">
+                    <div className="flex-1 lg:px-4 py-2 bg-red-50 min-h-[250px] lg:m-5 rounded-lg shadow-md">
                         <div className="flex flex-col space-y-4">
                             <Button
                                 onClick={() => {
@@ -319,14 +333,14 @@ const DropList = ({
     return (
         <Droppable droppableId={name}>
             {(provided) => (
-                <div {...provided.droppableProps} ref={provided.innerRef}>
-                    <div className="text-xl py-4 font-bold">
+                <Layout {...provided.droppableProps} ref={provided.innerRef}>
+                    <Paragraph className="text-xl py-4 font-bold">
                         {name} Questions ({questions.length})
-                    </div>
+                    </Paragraph>
                     {questions.length === 0 && (
-                        <div className="text-lg text-center">
+                        <Paragraph className="text-lg text-center">
                             No Questions {name}
-                        </div>
+                        </Paragraph>
                     )}
                     <List
                         dataSource={questions}
@@ -341,11 +355,13 @@ const DropList = ({
                                         ref={provided.innerRef}
                                         {...provided.draggableProps}
                                         {...provided.dragHandleProps}
-                                        className="flex flex-col m-2 shadow-md bg-zinc-50 rounded-lg"
+                                        className="flex flex-col m-2 shadow-md light:bg-zinc-50 rounded-lg"
                                     >
                                         <div>
                                             {showTitle && (
-                                                <div>Question {index + 1}</div>
+                                                <Text>
+                                                    Question {index + 1}
+                                                </Text>
                                             )}
                                         </div>
                                         <div className="h-40 flex w-full p-2">
@@ -355,8 +371,11 @@ const DropList = ({
                                                 src={question.image}
                                             />
                                             <div className="flex justify-evenly flex-col ml-5">
-                                                <p className="text-lg">
+                                                <p className="text-md lg:text-lg">
                                                     {question.answer}
+                                                </p>
+                                                <p className="text-sm">
+                                                    ({question.category})
                                                 </p>
                                                 <div>
                                                     <Rate
@@ -398,7 +417,7 @@ const DropList = ({
                     >
                         {provided.placeholder}
                     </List>
-                </div>
+                </Layout>
             )}
         </Droppable>
     )

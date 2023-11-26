@@ -1,9 +1,10 @@
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { fetchData } from '../utils/fetch'
-import { Table } from 'antd'
+import { Layout, Table, Typography } from 'antd'
 import LoadingContext from '../utils/LoadingContext'
 import { ColumnsType } from 'antd/es/table'
 
+const { Paragraph, Text } = Typography
 interface leaderboardType {
     _id: string
     rank: number
@@ -78,12 +79,12 @@ const Leaderboard = () => {
         }
     }
     return (
-        <div>
-            {userObj !== null && (
+        <Layout className="min-h-screen">
+            {userObj !== null && userRank !== -1 && (
                 <div className="text-center space-y-1 mt-2 shadow-lg p-2 bg-slate-200 w-[80%] max-w-xl mx-auto rounded-lg">
-                    <p>Rank: {userRank}</p>
-                    <p>Name: {userObj.fullName}</p>
-                    <p>username: {userObj.username}</p>
+                    <Text>Rank: {userRank}</Text>
+                    <Paragraph>Name: {userObj.fullName}</Paragraph>
+                    <Paragraph>username: {userObj.username}</Paragraph>
                 </div>
             )}
             <Table
@@ -93,7 +94,7 @@ const Leaderboard = () => {
                 })}
                 className="p-3"
             />
-        </div>
+        </Layout>
     )
 }
 export default Leaderboard

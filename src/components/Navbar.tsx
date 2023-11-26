@@ -6,9 +6,10 @@ import {
     TrophyOutlined
 } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
-import { Avatar, Dropdown, Flex, Layout, Menu } from 'antd'
+import { Avatar, Dropdown, Flex, Menu } from 'antd'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import '../glitch.css'
+import { DarkModeSwitch } from 'react-toggle-dark-mode'
 
 const menu: MenuProps['items'] = [
     {
@@ -43,7 +44,10 @@ const menu: MenuProps['items'] = [
     }
 ]
 
-const Navbar: React.FC = () => {
+const Navbar: React.FC<{
+    isDarkMode: boolean
+    toggleDarkMode: (checked: boolean) => void
+}> = ({ isDarkMode, toggleDarkMode }) => {
     const navigate = useNavigate()
     let { pathname: location } = useLocation()
     const [current, setCurrent] = useState(
@@ -60,11 +64,13 @@ const Navbar: React.FC = () => {
         {
             label: 'Home',
             key: '/home',
+            className: 'home-icon',
             icon: <HomeOutlined />
         },
         {
             label: 'Leaderboard',
             key: '/leaderboard',
+            className: 'leaderboard-icon',
             icon: <TrophyOutlined />
         }
     ]
@@ -78,6 +84,7 @@ const Navbar: React.FC = () => {
         items.push({
             label: 'Rules',
             key: '/rules',
+            className: 'rules-icon',
             icon: <ReadOutlined />
         })
     }
@@ -91,25 +98,35 @@ const Navbar: React.FC = () => {
     }
 
     return (
-        <Layout>
+        <div>
             <Flex align="center" justify="space-between" className="p-3">
                 <div className="glitch text-3xl">
                     <span aria-hidden="true">Decrypto 2k23</span>
                     Decrypto 2k23
                     <span aria-hidden="true">Decrypto 2k23</span>
                 </div>
-                <Dropdown menu={{ items: menu }}>
-                    <Avatar
-                        size="large"
-                        icon={
-                            <img
-                                src="/images/logo.jpeg"
-                                alt="logo"
-                                className="rounded-full"
-                            />
-                        }
+                <div className="flex items-center space-x-4">
+                    <DarkModeSwitch
+                        // style={{ marginBottom: '2rem' }}
+                        className="block"
+                        checked={isDarkMode}
+                        id="theme-changer"
+                        onChange={toggleDarkMode}
+                        size={40}
                     />
-                </Dropdown>
+                    <Dropdown menu={{ items: menu }}>
+                        <Avatar
+                            size="large"
+                            icon={
+                                <img
+                                    src="/images/logo.jpeg"
+                                    alt="logo"
+                                    className="rounded-full"
+                                />
+                            }
+                        />
+                    </Dropdown>
+                </div>
             </Flex>
             <Menu
                 onClick={onClick}
@@ -118,7 +135,7 @@ const Navbar: React.FC = () => {
                 items={items}
                 className="flex justify-center text-[16px] p-4"
             />
-        </Layout>
+        </div>
     )
 }
 

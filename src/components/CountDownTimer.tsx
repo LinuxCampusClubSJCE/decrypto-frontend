@@ -1,3 +1,4 @@
+import { Typography } from 'antd'
 import { useCallback, useEffect, useState, useRef } from 'react'
 
 const CountdownTimer = ({
@@ -44,7 +45,7 @@ const CountdownTimer = ({
     }, [calculateTimeLeft])
 
     return (
-        <div className="font-thin">
+        <Typography.Title level={4} className="countdown-timer font-thin">
             {completed ? (
                 <>🐧 Contest is Live 🎉</>
             ) : (
@@ -52,7 +53,7 @@ const CountdownTimer = ({
                     {timeLeft.hours}:{timeLeft.minutes}:{timeLeft.seconds}
                 </>
             )}
-        </div>
+        </Typography.Title>
     )
 }
 

@@ -8,6 +8,7 @@ const { Title } = Typography
 type FieldType = {
     fullName: string
     username: string
+    codeName: string
     password: string
     email: string
     usn: string
@@ -70,13 +71,14 @@ const AddUserAdmin: React.FC = () => {
     }
     return (
         <div className="p-3">
-            <Title level={3}>Create User</Title>
+            <Title level={3}>{id ? 'Update User' : 'Create User'}</Title>
             <Form
                 form={form}
                 name="login"
                 initialValues={{}}
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
+                layout="vertical"
             >
                 <Form.Item<FieldType>
                     label="Full Name"
@@ -99,6 +101,13 @@ const AddUserAdmin: React.FC = () => {
                             message: 'Please input your username!'
                         }
                     ]}
+                >
+                    <Input />
+                </Form.Item>
+                <Form.Item<FieldType>
+                    label="Code Name"
+                    extra="Only For Team Members"
+                    name="codeName"
                 >
                     <Input />
                 </Form.Item>

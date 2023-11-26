@@ -56,10 +56,15 @@ const Register: React.FC = () => {
     return (
         <div className="p-3">
             <Title level={3}>Register</Title>
+            <Typography.Paragraph>
+                Please ensure that the details are correct as they cannot be
+                changed later
+            </Typography.Paragraph>
             <Form
                 name="login"
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
+                layout="vertical"
             >
                 <Form.Item<FieldType>
                     label="Full Name"
@@ -75,6 +80,7 @@ const Register: React.FC = () => {
                 </Form.Item>
                 <Form.Item<FieldType>
                     label="Username"
+                    extra="Displayed on the leaderboard"
                     name="username"
                     rules={[
                         {
@@ -125,6 +131,7 @@ const Register: React.FC = () => {
                 <Form.Item<FieldType>
                     label="Password"
                     name="password"
+                    extra="Please avoid using common passwords"
                     rules={[
                         {
                             required: true,

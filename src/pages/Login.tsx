@@ -50,6 +50,7 @@ const Login: React.FC = () => {
                 name="login"
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
+                layout="vertical"
             >
                 <Form.Item<FieldType>
                     label="Username or Email"

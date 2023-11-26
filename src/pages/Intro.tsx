@@ -1,15 +1,11 @@
-import { Button, Flex, message } from 'antd'
-import { Link, useNavigate } from 'react-router-dom'
+import { Button, Flex, Layout, message } from 'antd'
+import { useNavigate } from 'react-router-dom'
 import { Typography } from 'antd'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { fetchData } from '../utils/fetch'
 import CountdownTimer from '../components/CountDownTimer'
-import {
-    ChromeOutlined,
-    InstagramOutlined,
-    LinkedinOutlined
-} from '@ant-design/icons'
 import LoadingContext from '../utils/LoadingContext'
+import Footer from '../components/Footer'
 
 const { Title } = Typography
 const Intro = () => {
@@ -36,8 +32,8 @@ const Intro = () => {
         checkContest()
     }, [checkContest])
     return (
-        <div>
-            <Title level={3} className="text-center">
+        <Layout>
+            <Title level={3} className="text-center mt-2">
                 <CountdownTimer
                     futureTimestamp={startTime}
                     onComplete={() => {}}
@@ -72,42 +68,8 @@ const Intro = () => {
                     Register
                 </Button>
             </Flex>
-            <div className="flex p-2 py-4 flex-col  justify-center bg-slate-900 font-extralight text-zinc-200">
-                <div className="text-center mb-3">Linux Campus Club</div>
-                <div className="flex justify-evenly items-center flex-col md:flex-row space-y-1">
-                    <Link target="_blank" to="https://lccjssstuniv.org/">
-                        <ChromeOutlined className="mr-1" />
-                        Website
-                    </Link>
-                    <Link
-                        target="_blank"
-                        to="https://www.instagram.com/linuxcampusclub/"
-                    >
-                        <InstagramOutlined className="mr-1" />
-                        Instagram
-                    </Link>
-                    <Link
-                        target="_blank"
-                        to="https://in.linkedin.com/company/linux-campus-club"
-                    >
-                        <LinkedinOutlined className="mr-1" />
-                        Linkedin
-                    </Link>
-                </div>
-                <div className="text-center mt-3">
-                    Developed By
-                    <div className="pt-3">
-                        <Link
-                            target="_blank"
-                            to="https://www.linkedin.com/in/akshayurs/"
-                        >
-                            <LinkedinOutlined className="mr-1" />
-                        </Link>
-                        Akshay Urs
-                    </div>
-                </div>
-            </div>
-        </div>
+            <Footer />
+        </Layout>
     )
 }
 

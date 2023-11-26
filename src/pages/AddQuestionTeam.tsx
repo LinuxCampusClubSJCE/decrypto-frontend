@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from 'react'
-import { Button, Form, Input, Rate, Upload } from 'antd'
+import { Button, Form, Input, Rate, Select, Upload } from 'antd'
 import { Typography } from 'antd'
 import { fetchData } from '../utils/fetch'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -9,14 +9,27 @@ import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import type { UploadChangeParam } from 'antd/es/upload'
 import LoadingContext from '../utils/LoadingContext'
 const { Title } = Typography
+
+enum QuestionCategory {
+    Other = 'Other',
+    Technical = 'Technical',
+    Movie = 'Movie',
+    Music = 'Music',
+    Celebrity = 'Celebrity',
+    Sports = 'Sports',
+    Place = 'Place',
+    Brand = 'Brand',
+    Food = 'Food'
+}
 type FieldType = {
     image: string
     answer: string
     hint: string
     difficulty: number
     showedHint: string
+    category: QuestionCategory
     rating: number
-    ansCount: number
+    avgAttempts: number
     rateCount: number
 }
 const getBase64 = (img: RcFile, callback: (url: string) => void) => {
@@ -174,8 +187,12 @@ const AddQuestionTeam = ({ isAdmin }: { isAdmin?: boolean }) => {
 
     return (
         <div className="p-3">
+            <Typography.Title level={4}>
+                Check for existing questions that have been uploaded by others
+            </Typography.Title>
             <Form
                 name="checkans"
+                layout="vertical"
                 onFinish={async (values) => {
                     const answer = values.answer
                         .replace(/\s+/g, '')
@@ -193,8 +210,8 @@ const AddQuestionTeam = ({ isAdmin }: { isAdmin?: boolean }) => {
                 }}
             >
                 <Form.Item<FieldType>
-                    label="Check For Existing Question"
                     name="answer"
+                    extra="Please don't spend your time creating duplicate questions."
                     rules={[
                         {
                             required: true,
@@ -209,15 +226,24 @@ const AddQuestionTeam = ({ isAdmin }: { isAdmin?: boolean }) => {
                 </Form.Item>
             </Form>
             <Title level={3}>New Question</Title>
+            <Typography.Paragraph>
+                Questions will not be published by default. The admin will
+                select the questions and determine their arrangement order.
+            </Typography.Paragraph>
             <Form
                 form={form}
                 name="question"
                 onFinish={onFinish}
+                layout="vertical"
+                initialValues={{
+                    category: 'Other'
+                }}
                 onFinishFailed={onFinishFailed}
             >
                 <Form.Item<FieldType>
                     label="Image"
                     name="image"
+                    extra="Same will be displayed to users"
                     rules={[
                         {
                             required: true,
@@ -257,19 +283,46 @@ const AddQuestionTeam = ({ isAdmin }: { isAdmin?: boolean }) => {
 
                 <Form.Item<FieldType>
                     label="Answer"
+                    extra="(Use Space Between Words and Uppercase if required)"
                     name="answer"
                     rules={[
                         {
                             required: true,
-                            message: 'Please input your username!'
+                            message: 'Please input your Answer!'
                         }
                     ]}
                 >
-                    <Input />
+                    <Input placeholder="Ex: Linux Campus Club" />
+                </Form.Item>
+                <Form.Item<FieldType>
+                    label="Category"
+                    name="category"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please input your Answer!'
+                        }
+                    ]}
+                >
+                    <Select>
+                        {Object.values(QuestionCategory).map((val) => (
+                            <Select.Option value={val}>{val}</Select.Option>
+                        ))}
+                    </Select>
                 </Form.Item>
 
-                <Form.Item<FieldType> label="Hint" name="hint">
-                    <Input />
+                <Form.Item<FieldType>
+                    label="Hint"
+                    name="hint"
+                    extra="hint is displayed to users only when they are stuck"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please input your hint!'
+                        }
+                    ]}
+                >
+                    <Input placeholder="Ex: Penguin" />
                 </Form.Item>
                 {isAdmin && (
                     <>
@@ -296,7 +349,7 @@ const AddQuestionTeam = ({ isAdmin }: { isAdmin?: boolean }) => {
                         </Form.Item>
                         <Form.Item<FieldType>
                             label="Avg Attempts"
-                            name="ansCount"
+                            name="avgAttempts"
                         >
                             <Input />
                         </Form.Item>
@@ -304,6 +357,7 @@ const AddQuestionTeam = ({ isAdmin }: { isAdmin?: boolean }) => {
                 )}
                 <Form.Item<FieldType>
                     label="Difficulty"
+                    extra="(Not Displayed to User. Only to arrange Question)"
                     name="difficulty"
                     rules={[
                         {
