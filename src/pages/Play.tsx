@@ -130,6 +130,8 @@ const Play = () => {
                 avgAttempts: localStorage.getItem('avgAttempts')
             }
         })
+        setLoading(false)
+        setIsModalOpen(false)
         if (data.success === 'false') {
             message.error(data.message)
         } else {
@@ -137,8 +139,6 @@ const Play = () => {
             avgAttempts.current = 0
             loadQuestion()
         }
-        setIsModalOpen(false)
-        setLoading(false)
     }
     return (
         <Layout>
