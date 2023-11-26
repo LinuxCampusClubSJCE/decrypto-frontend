@@ -50,36 +50,43 @@ const compressImage = (file: File, maxSizeInBytes: number): Promise<File> => {
                 let width = img.width
                 let height = img.height
 
-                const MAX_WIDTH = 1024
-                const MAX_HEIGHT = 1024
+                const MAX_SIZE_BYTES = maxSizeInBytes // Target size in bytes (50KB)
 
-                if (width > height) {
-                    if (width > MAX_WIDTH) {
-                        height *= MAX_WIDTH / width
-                        width = MAX_WIDTH
-                    }
-                } else {
-                    if (height > MAX_HEIGHT) {
-                        width *= MAX_HEIGHT / height
-                        height = MAX_HEIGHT
-                    }
+                const calculateSize = () => {
+                    canvas.width = width
+                    canvas.height = height
+                    ctx.drawImage(img, 0, 0, width, height)
+
+                    canvas.toBlob(
+                        (blob) => {
+                            const fileSize = blob!.size // Size in bytes
+                            if (
+                                fileSize <= MAX_SIZE_BYTES ||
+                                width <= 10 ||
+                                height <= 10
+                            ) {
+                                // If the image size is within limits or the dimensions are too small, resolve with the compressed file
+                                const compressedFile = new File(
+                                    [blob!],
+                                    file.name,
+                                    {
+                                        type: 'image/jpeg'
+                                    }
+                                )
+                                resolve(compressedFile)
+                            } else {
+                                // Resize the image by reducing dimensions and recheck size
+                                width *= 0.9 // Reduce width by 10%
+                                height *= 0.9 // Reduce height by 10%
+                                calculateSize() // Recursively call to check new size
+                            }
+                        },
+                        'image/jpeg',
+                        0.7 // Adjust quality as needed (0.7 is 70% quality)
+                    )
                 }
 
-                canvas.width = width
-                canvas.height = height
-
-                ctx.drawImage(img, 0, 0, width, height)
-
-                canvas.toBlob(
-                    (blob) => {
-                        const compressedFile = new File([blob!], file.name, {
-                            type: 'image/jpeg'
-                        })
-                        resolve(compressedFile)
-                    },
-                    'image/jpeg',
-                    0.7
-                ) // Adjust quality as needed (0.7 is 70% quality)
+                calculateSize() // Start the resizing process
             }
             img.src = event.target!.result as string
         }
@@ -176,8 +183,8 @@ const AddQuestionTeam = ({ isAdmin }: { isAdmin?: boolean }) => {
             setImageLoading(true)
             const compressedFile = await compressImage(
                 info.file.originFileObj as File,
-                1000 * 1024
-            ) // Max size: 1000KB
+                40 * 1024
+            ) // Max size: 40KB
             getBase64(compressedFile as RcFile, (url) => {
                 setImageUrl(url)
                 setImageLoading(false)

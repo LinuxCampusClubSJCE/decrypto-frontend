@@ -32,7 +32,7 @@ const columns: ColumnsType<leaderboardType> = [
 ]
 
 const Leaderboard = () => {
-    const { setLoading } = useContext(LoadingContext)
+    const [isLoading, setLoading] = useState(false)
 
     const loadData = useCallback(async () => {
         setLoading(true)
@@ -88,6 +88,7 @@ const Leaderboard = () => {
                 </div>
             )}
             <Table
+                loading={isLoading}
                 columns={columns}
                 dataSource={leaderboard.map((val) => {
                     return { ...val, key: val._id }
