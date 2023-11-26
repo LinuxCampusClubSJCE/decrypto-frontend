@@ -93,8 +93,8 @@ const Play = () => {
         if (question === undefined) return
         const answer = modifyString(values.answer)
         console.log(values.answer, answer, question.answer, Md5.hashStr(answer))
+        avgAttempts.current++
         if (Md5.hashStr(answer) !== question.answer) {
-            avgAttempts.current++
             localStorage.setItem('avgAttempts', String(avgAttempts.current))
             inputRef.current?.input?.classList.add('apply-shake')
             navigator.vibrate(100)
@@ -157,7 +157,7 @@ const Play = () => {
                         title="Rate this Question"
                         className="p-4 rounded-md fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
                     >
-                        <Layout className="flex flex-col items-center space-y-6">
+                        <div className="flex flex-col items-center space-y-6">
                             <Rate
                                 onChange={(val) => {
                                     setRating(val)
@@ -166,7 +166,7 @@ const Play = () => {
                                 value={rating}
                             />
                             <Button onClick={handleNext}>Next</Button>
-                        </Layout>
+                        </div>
                     </Card>
                 </Layout>
             )}

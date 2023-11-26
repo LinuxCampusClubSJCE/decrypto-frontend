@@ -107,6 +107,7 @@ function App() {
                                         )
                                     }
                                 }}
+                                hideCloseButton
                                 spotlightClicks
                             />
                         )}
