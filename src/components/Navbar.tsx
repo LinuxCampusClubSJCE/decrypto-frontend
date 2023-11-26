@@ -100,7 +100,7 @@ const Navbar: React.FC<{
     return (
         <div>
             <Flex align="center" justify="space-between" className="p-3">
-                <div className="glitch text-3xl">
+                <div className="glitch text-3xl logo-container">
                     <span aria-hidden="true">Decrypto 2k23</span>
                     Decrypto 2k23
                     <span aria-hidden="true">Decrypto 2k23</span>

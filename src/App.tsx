@@ -20,9 +20,13 @@ import Joyride, { STATUS } from 'react-joyride'
 
 const steps = [
     {
-        target: '#theme-changer',
-        content: 'You can change Light/Dark Theme here',
+        target: '.logo-container',
+        content: 'Welcome to Decrypto by LCC. Complete this tour to hide this',
         disableBeacon: true
+    },
+    {
+        target: '#theme-changer',
+        content: 'You can change Light/Dark Theme here'
     },
     {
         target: '.leaderboard-icon',
