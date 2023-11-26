@@ -143,10 +143,10 @@ const Play = () => {
     return (
         <Layout>
             {completed && (
-                <Layout className="text-3xl flex items-center justify-center h-screen text-center">
+                <Text className="text-3xl flex items-center justify-center h-screen text-center">
                     🎉 Congratulations you have successfully completed decrypto
                     2k23 🏆
-                </Layout>
+                </Text>
             )}
             {isModalOpen && (
                 <Layout className="z-10 fixed top-0 left-0 bg-black bg-opacity-25 w-full h-full backdrop-blur-sm">

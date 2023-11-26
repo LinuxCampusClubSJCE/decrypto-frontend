@@ -105,14 +105,13 @@ const Navbar: React.FC<{
                     Decrypto 2k23
                     <span aria-hidden="true">Decrypto 2k23</span>
                 </div>
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-7">
                     <DarkModeSwitch
-                        // style={{ marginBottom: '2rem' }}
                         className="block"
                         checked={isDarkMode}
                         id="theme-changer"
                         onChange={toggleDarkMode}
-                        size={40}
+                        size={20}
                     />
                     <Dropdown menu={{ items: menu }}>
                         <Avatar

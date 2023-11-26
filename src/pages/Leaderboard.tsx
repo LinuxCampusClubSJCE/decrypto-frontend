@@ -81,7 +81,7 @@ const Leaderboard = () => {
     return (
         <Layout className="min-h-screen">
             {userObj !== null && userRank !== -1 && (
-                <div className="text-center space-y-1 mt-2 shadow-lg p-2 bg-slate-200 w-[80%] max-w-xl mx-auto rounded-lg">
+                <div className="text-center space-y-1 mt-2">
                     <Text>Rank: {userRank}</Text>
                     <Paragraph>Name: {userObj.fullName}</Paragraph>
                     <Paragraph>username: {userObj.username}</Paragraph>
