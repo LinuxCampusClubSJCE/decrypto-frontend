@@ -1,7 +1,6 @@
-import { useCallback, useContext, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { fetchData } from '../utils/fetch'
 import { Layout, Table, Typography } from 'antd'
-import LoadingContext from '../utils/LoadingContext'
 import { ColumnsType } from 'antd/es/table'
 
 const { Paragraph, Text } = Typography
