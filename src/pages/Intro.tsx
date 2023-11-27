@@ -14,11 +14,11 @@ const Intro = () => {
     const [startTime, setStartTime] = useState<number>(0)
     const checkContest = useCallback(async () => {
         setLoading(true)
-        const timmer = setTimeout(() => {
+        const timer = setTimeout(() => {
             message.loading('Starting the server. It may take upto 30 Seconds')
         }, 3000)
         const data = await fetchData({ path: '/contest/details' })
-        clearTimeout(timmer)
+        clearTimeout(timer)
         setLoading(false)
         if (data.success === false) {
             message.error(data.message)

@@ -180,6 +180,7 @@ const AddQuestionTeam = ({ isAdmin }: { isAdmin?: boolean }) => {
         info: UploadChangeParam<UploadFile>
     ) => {
         if (info.file.originFileObj) {
+            form.setFieldValue('answer', info.file.name.split('.')[0].trim())
             setImageLoading(true)
             const compressedFile = await compressImage(
                 info.file.originFileObj as File,
