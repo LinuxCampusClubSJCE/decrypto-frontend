@@ -2,6 +2,7 @@ import { Button } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import ListUsers from '../components/ListUsers'
 import ListQuestionCount from '../components/ListQuestionCount'
+import ListCategoryCount from '../components/ListCategoryCount'
 const Admin = () => {
     const navigate = useNavigate()
     return (
@@ -30,6 +31,7 @@ const Admin = () => {
                 </Button>
             </div>
             <ListQuestionCount />
+            <ListCategoryCount />
             <ListUsers />
         </div>
     )
