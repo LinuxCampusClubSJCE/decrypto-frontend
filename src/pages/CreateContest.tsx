@@ -60,7 +60,6 @@ const CreateContest: React.FC = () => {
     const onFinish = async (values: FieldType) => {
         let data
         setLoading(true)
-        console.log(values)
         const body = {
             name: values.name,
             startTime: values.time[0],

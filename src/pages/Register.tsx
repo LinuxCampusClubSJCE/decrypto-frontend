@@ -25,15 +25,13 @@ const Register: React.FC = () => {
     const { setLoading } = useContext(LoadingContext)
 
     const checkStarted = useCallback(async () => {
-        setLoading(true)
         const data = await fetchData({
             path: '/auth/registerstarted'
         })
-        setLoading(false)
         if (data.success && data.started === false) {
             message.error('Registration not yet started')
         }
-    }, [setLoading])
+    }, [])
     useEffect(() => {
         checkStarted()
     }, [checkStarted])
@@ -44,12 +42,12 @@ const Register: React.FC = () => {
             method: 'POST',
             body: values
         })
+        setLoading(false)
         if (data.success === false) {
             message.error(data.message)
             navigator.vibrate(200)
             return
         }
-        setLoading(false)
         message.success(data.message)
         navigate('/')
     }
@@ -86,6 +84,27 @@ const Register: React.FC = () => {
                         {
                             required: true,
                             message: 'Please input your username!'
+                        },
+                        {
+                            validator: (_, value) => {
+                                const alphanumericRegex = /^[a-zA-Z0-9]*$/
+
+                                if (!alphanumericRegex.test(value)) {
+                                    return Promise.reject(
+                                        new Error(
+                                            'Only alphanumeric characters are allowed.'
+                                        )
+                                    )
+                                }
+
+                                return Promise.resolve()
+                            }
+                        },
+                        {
+                            min: 3
+                        },
+                        {
+                            max: 15
                         }
                     ]}
                 >

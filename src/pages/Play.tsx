@@ -1,6 +1,5 @@
-import { useCallback, useContext, useEffect, useState, useRef } from 'react'
+import { useCallback, useEffect, useState, useRef } from 'react'
 import { fetchData } from '../utils/fetch'
-import LoadingContext from '../utils/LoadingContext'
 import {
     Button,
     Card,
@@ -9,6 +8,7 @@ import {
     InputRef,
     Layout,
     Rate,
+    Skeleton,
     Typography,
     message
 } from 'antd'
@@ -63,21 +63,35 @@ const Play = () => {
     const [form] = Form.useForm()
     const inputRef = useRef<InputRef>(null)
     const [completed, setCompleted] = useState(false)
+    const [imgLoading, setImgLoading] = useState(false)
     const avgAttempts = useRef(Number(localStorage.getItem('avgAttempts') || 0))
     const [validateStatus, setValidateStatus] = useState<'success' | 'error'>(
         'success'
     )
     const [showConfettim, setShowConfettim] = useState(false)
-    const [question, setQuestion] = useState<Question>()
-    const { setLoading } = useContext(LoadingContext)
+    const [question, setQuestion] = useState<Question | undefined>({
+        no: 0,
+        image: '',
+        showedHint: '',
+        answer: '',
+        rating: 0,
+        rateCount: 0,
+        avgAttempts: 0,
+        creator: {
+            codeName: ''
+        }
+    })
+    const [notStarted, setNotStarted] = useState(false)
     const { innerWidth: width, innerHeight: height } = window
     const loadQuestion = useCallback(async () => {
-        setLoading(true)
+        setImgLoading(true)
         const data = await fetchData({ path: '/question/my' })
-        setLoading(false)
+        setImgLoading(false)
         if (data.success === 'false') {
+            setNotStarted(true)
             message.error(data.message)
         } else if (data.completed === true) {
+            setNotStarted(true)
             setCompleted(true)
             setQuestion(undefined)
             message.success(data.message)
@@ -85,14 +99,25 @@ const Play = () => {
             form.setFieldValue('answer', '')
             setQuestion(data.question)
         }
-    }, [setLoading, form])
+    }, [form])
     useEffect(() => {
+        console.log('calling effect')
         loadQuestion()
-    }, [loadQuestion, setLoading, setQuestion])
+    }, [loadQuestion])
+    useEffect(() => {
+        ;(async () => {
+            const timer = setTimeout(() => {
+                message.loading(
+                    'Starting the server. It may take upto 30 Seconds'
+                )
+            }, 3000)
+            await fetchData({ path: '/' })
+            clearTimeout(timer)
+        })()
+    }, [])
     const submitAns = async (values: FieldType) => {
         if (question === undefined) return
         const answer = modifyString(values.answer)
-        console.log(values.answer, answer, question.answer, Md5.hashStr(answer))
         avgAttempts.current++
         localStorage.setItem('avgAttempts', String(avgAttempts.current))
         if (Md5.hashStr(answer) !== question.answer) {
@@ -120,7 +145,8 @@ const Play = () => {
             message.error('Please rate the question')
             return
         }
-        setLoading(true)
+        setImgLoading(true)
+        setIsModalOpen(false)
         const data = await fetchData({
             path: '/question/ans',
             method: 'POST',
@@ -130,8 +156,6 @@ const Play = () => {
                 avgAttempts: localStorage.getItem('avgAttempts')
             }
         })
-        setLoading(false)
-        setIsModalOpen(false)
         if (data.success === 'false') {
             message.error(data.message)
         } else {
@@ -170,10 +194,10 @@ const Play = () => {
                     </Card>
                 </Layout>
             )}
-            {!completed && !question && (
-                <Layout className="text-xl flex items-center justify-center h-screen">
+            {notStarted && (
+                <Text className="text-xl flex items-center justify-center h-screen">
                     Contest Not Yet Started... ⏳
-                </Layout>
+                </Text>
             )}
             {question && (
                 <div className="flex flex-col items-center space-y-1 text-center">
@@ -227,12 +251,18 @@ const Play = () => {
                             )}
                         </Paragraph>
                     </div>
-
-                    <img
-                        src={question.image}
-                        className="block w-full max-h-96 object-contain"
-                        alt="question"
-                    />
+                    {imgLoading ? (
+                        <Skeleton.Image
+                            className="!w-full !h-56 max-h-96"
+                            active
+                        />
+                    ) : (
+                        <img
+                            src={question.image}
+                            className="block w-full max-h-96 object-contain"
+                            alt="question"
+                        />
+                    )}
                     {question.showedHint && (
                         <Paragraph className="hint-text">
                             Hint: {question.showedHint}

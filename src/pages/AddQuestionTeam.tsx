@@ -2,7 +2,7 @@ import { useCallback, useContext, useEffect, useState } from 'react'
 import { Button, Form, Input, Rate, Select, Upload } from 'antd'
 import { Typography } from 'antd'
 import { fetchData } from '../utils/fetch'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { message } from 'antd'
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
@@ -14,12 +14,14 @@ enum QuestionCategory {
     Other = 'Other',
     Technical = 'Technical',
     Movie = 'Movie',
+    Series = 'TV/Web Series',
     Music = 'Music',
-    Celebrity = 'Celebrity',
+    Celebrity = 'Celebrity/Person',
     Sports = 'Sports',
     Place = 'Place',
-    Brand = 'Brand',
-    Food = 'Food'
+    Brand = 'Brand/Company',
+    Food = 'Food',
+    Meme = 'Meme'
 }
 type FieldType = {
     image: string
@@ -115,7 +117,6 @@ const AddQuestionTeam = ({ isAdmin }: { isAdmin?: boolean }) => {
     const { setLoading } = useContext(LoadingContext)
     const [imageLoading, setImageLoading] = useState(false)
     const [form] = Form.useForm()
-    const navigate = useNavigate()
     let { id } = useParams()
 
     const fetchUser = useCallback(
@@ -148,6 +149,7 @@ const AddQuestionTeam = ({ isAdmin }: { isAdmin?: boolean }) => {
         checkStarted()
         if (id) fetchUser(id)
     }, [checkStarted, fetchUser, id])
+    const [imageUrl, setImageUrl] = useState<string>()
 
     const onFinish = async (values: any) => {
         let data
@@ -171,10 +173,12 @@ const AddQuestionTeam = ({ isAdmin }: { isAdmin?: boolean }) => {
             navigator.vibrate(200)
             return
         }
+        if (id === undefined) {
+            setImageUrl(undefined)
+            form.resetFields()
+        }
         message.success(data.message)
-        navigate('/')
     }
-    const [imageUrl, setImageUrl] = useState<string>()
 
     const handleChange: UploadProps['onChange'] = async (
         info: UploadChangeParam<UploadFile>
@@ -224,6 +228,25 @@ const AddQuestionTeam = ({ isAdmin }: { isAdmin?: boolean }) => {
                         {
                             required: true,
                             message: 'Please input the Answer!'
+                        },
+                        {
+                            min: 3
+                        },
+                        {
+                            validator: (_, value) => {
+                                // Regular expression to allow alphanumeric characters and spaces
+                                const alphanumericWithSpaceRegex =
+                                    /^[a-zA-Z0-9\s]*$/
+
+                                if (!alphanumericWithSpaceRegex.test(value)) {
+                                    return Promise.reject(
+                                        new Error(
+                                            'Only alphanumeric characters and spaces are allowed.'
+                                        )
+                                    )
+                                }
+                                return Promise.resolve()
+                            }
                         }
                     ]}
                 >

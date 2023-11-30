@@ -7,7 +7,14 @@ import { Layout } from 'antd'
 import { Link } from 'react-router-dom'
 const Footer = () => {
     return (
-        <Layout className="flex p-2 py-4 flex-col  justify-center bg-slate-900 font-extralight text-zinc-200">
+        <Layout
+            style={{
+                backgroundColor: '#141414'
+            }}
+            className={
+                'flex p-2 py-4 flex-col  justify-center bg-gray-950 font-extralight text-zinc-200'
+            }
+        >
             <div className="text-center mb-3">Linux Campus Club</div>
             <div className="lcc-links flex justify-evenly items-center flex-col md:flex-row space-y-1">
                 <Link target="_blank" to="https://lccjssstuniv.org/">

@@ -1,20 +1,20 @@
 import { Button, Flex, Layout, message } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import { Typography } from 'antd'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { fetchData } from '../utils/fetch'
 import CountdownTimer from '../components/CountDownTimer'
 import LoadingContext from '../utils/LoadingContext'
 import Footer from '../components/Footer'
 
-const { Title } = Typography
 const Intro = () => {
     const { setLoading } = useContext(LoadingContext)
     const navigate = useNavigate()
     const [startTime, setStartTime] = useState<number>(0)
+    const [started, setStarted] = useState<boolean>(false)
+    const [ended, setEnded] = useState<boolean>(false)
     const checkContest = useCallback(async () => {
-        setLoading(true)
         const timer = setTimeout(() => {
+            setLoading(true)
             message.loading('Starting the server. It may take upto 30 Seconds')
         }, 3000)
         const data = await fetchData({ path: '/contest/details' })
@@ -22,9 +22,13 @@ const Intro = () => {
         setLoading(false)
         if (data.success === false) {
             message.error(data.message)
+            if (data.ended === true) {
+                setEnded(true)
+            }
             navigator.vibrate(200)
         } else {
             if (data.started === true) {
+                setStarted(true)
                 message.success(data.message)
             } else {
                 message.info(data.message)
@@ -37,12 +41,12 @@ const Intro = () => {
     }, [checkContest])
     return (
         <Layout>
-            <Title level={3} className="text-center mt-2">
-                <CountdownTimer
-                    futureTimestamp={startTime}
-                    onComplete={() => {}}
-                />
-            </Title>
+            <CountdownTimer
+                futureTimestamp={startTime}
+                started={started}
+                ended={ended}
+                onComplete={() => {}}
+            />
             <Flex
                 vertical
                 gap={20}
@@ -59,7 +63,7 @@ const Intro = () => {
                     onClick={() => {
                         navigate('/login')
                     }}
-                    className="w-full max-w-xl shadow-md "
+                    className="w-full max-w-xl shadow-md"
                 >
                     Login
                 </Button>

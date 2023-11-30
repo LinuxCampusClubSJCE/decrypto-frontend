@@ -333,7 +333,11 @@ const DropList = ({
     return (
         <Droppable droppableId={name}>
             {(provided) => (
-                <Layout {...provided.droppableProps} ref={provided.innerRef}>
+                <Layout
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    className="h-full bg-inherit"
+                >
                     <Paragraph className="text-xl py-4 font-bold">
                         {name} Questions ({questions.length})
                     </Paragraph>
