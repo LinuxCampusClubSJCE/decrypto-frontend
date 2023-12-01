@@ -12,6 +12,7 @@ import LoadingContext from './utils/LoadingContext'
 import { PropagateLoader } from 'react-spinners'
 import Joyride, { STATUS } from 'react-joyride'
 import { AliasToken } from 'antd/es/theme/internal'
+import Play from './pages/Play'
 const { Text } = Typography
 const steps = [
     {
@@ -146,6 +147,7 @@ function App() {
                         <Routes>
                             <Route path="/" element={<Home />} />
                             <Route path="/login" element={<Login />} />
+                            <Route path="/play" element={<Play />} />
                             <Route path="/register" element={<Register />} />
                             <Route
                                 path="/rules"

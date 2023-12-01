@@ -8,6 +8,7 @@ interface leaderboardType {
     _id: string
     rank: number
     username: string
+    fullName?: string
     solvedQuestions: number
 }
 
@@ -35,13 +36,24 @@ const Leaderboard = () => {
 
     const loadData = useCallback(async () => {
         setLoading(true)
-        const data = await fetchData({ path: '/users/leaderboard' })
+        const isTeam =
+            JSON.parse(localStorage.getItem('user') || '{}')['isTeam'] === true
+        const data = await fetchData({
+            path: isTeam ? '/users/teamleaderboard' : '/users/leaderboard'
+        })
         setLoading(false)
         if (data.success) {
             let lastVal =
                 data.leaderboard.length !== 0 &&
                 data.leaderboard[0].solvedQuestions
             let rank = 1
+            if (isTeam) {
+                data.leaderboard = data.leaderboard.map(
+                    (data: leaderboardType) => {
+                        return { ...data, username: data.fullName }
+                    }
+                )
+            }
             const leaderboardData = data.leaderboard.map(
                 (item: leaderboardType) => {
                     if (lastVal !== item.solvedQuestions) {

@@ -55,7 +55,7 @@ const Intro = () => {
                 align="center"
             >
                 <img
-                    src="/images/logo.jpeg"
+                    src="/images/poster.jpeg"
                     alt="logo"
                     className="lg:mx-auto"
                 />

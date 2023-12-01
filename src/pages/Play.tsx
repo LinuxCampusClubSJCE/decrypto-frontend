@@ -87,7 +87,7 @@ const Play = () => {
         setImgLoading(true)
         const data = await fetchData({ path: '/question/my' })
         setImgLoading(false)
-        if (data.success === 'false') {
+        if (data.success === false) {
             setNotStarted(true)
             message.error(data.message)
         } else if (data.completed === true) {
@@ -199,28 +199,29 @@ const Play = () => {
                     Contest Not Yet Started... ⏳
                 </Text>
             )}
-            {question && (
+            {notStarted === false && question && (
                 <div className="flex flex-col items-center space-y-1 text-center">
-                    {localStorage.getItem('gameTutorialPassed') !== 'true' && (
-                        <Joyride
-                            steps={steps}
-                            continuous={true}
-                            showProgress={true}
-                            callback={({ status }) => {
-                                if (
-                                    ([STATUS.FINISHED] as string[]).includes(
-                                        status
-                                    )
-                                ) {
-                                    window.localStorage.setItem(
-                                        'gameTutorialPassed',
-                                        'true'
-                                    )
-                                }
-                            }}
-                            spotlightClicks
-                        />
-                    )}
+                    {localStorage.getItem('gameTutorialPassed') !== 'true' &&
+                        question.image !== '' && (
+                            <Joyride
+                                steps={steps}
+                                continuous={true}
+                                showProgress={true}
+                                callback={({ status }) => {
+                                    if (
+                                        (
+                                            [STATUS.FINISHED] as string[]
+                                        ).includes(status)
+                                    ) {
+                                        window.localStorage.setItem(
+                                            'gameTutorialPassed',
+                                            'true'
+                                        )
+                                    }
+                                }}
+                                spotlightClicks
+                            />
+                        )}
                     <div className="space-y-2 mb-8 mt-4">
                         <Text className="text-2xl text-center">
                             Question {question.no}

@@ -16,6 +16,9 @@ const Team = () => {
             <Paragraph className="text-center text-md">
                 You can add question here
             </Paragraph>
+            <Link to={'/play'} className="flex justify-center p-3">
+                <Button>Play with 🐧</Button>
+            </Link>
             <Link to={'/details/' + userId} className="flex justify-center p-3">
                 <Button>Update Profile</Button>
             </Link>

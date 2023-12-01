@@ -1,7 +1,9 @@
 import {
     ChromeOutlined,
+    GithubOutlined,
     InstagramOutlined,
-    LinkedinOutlined
+    LinkedinOutlined,
+    RobotOutlined
 } from '@ant-design/icons'
 import { Layout } from 'antd'
 import { Link } from 'react-router-dom'
@@ -20,6 +22,20 @@ const Footer = () => {
                 <Link target="_blank" to="https://lccjssstuniv.org/">
                     <ChromeOutlined className="mr-1" />
                     Website
+                </Link>
+                <Link
+                    target="_blank"
+                    to="https://github.com/LinuxCampusClubSJCE"
+                >
+                    <GithubOutlined className="mr-1" />
+                    Github
+                </Link>
+                <Link
+                    target="_blank"
+                    to="https://discord.com/invite/c3NwvbEk7H"
+                >
+                    <RobotOutlined className="mr-1" />
+                    Discord
                 </Link>
                 <Link
                     target="_blank"
