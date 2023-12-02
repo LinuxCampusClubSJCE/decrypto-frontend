@@ -37,44 +37,58 @@ const Leaderboard = () => {
 
     const loadData = useCallback(async () => {
         setLoading(true)
-        const isTeam =
-            JSON.parse(localStorage.getItem('user') || '{}')['isTeam'] === true
-        const data = await fetchData({
-            path: isTeam ? '/users/teamleaderboard' : '/users/leaderboard'
-        })
-        setLoading(false)
-        if (data.success) {
-            let lastVal =
-                data.leaderboard.length !== 0 &&
-                data.leaderboard[0].solvedQuestions
-            let rank = 1
-            if (isTeam) {
-                data.leaderboard = data.leaderboard.map(
-                    (data: leaderboardType) => {
-                        return { ...data, username: data.fullName }
+        const handleData = (
+            data: any,
+            setLeaderboard: React.Dispatch<
+                React.SetStateAction<leaderboardType[]>
+            >,
+            isTeam: boolean
+        ) => {
+            if (data.success) {
+                let lastVal =
+                    data.leaderboard.length !== 0 &&
+                    data.leaderboard[0].solvedQuestions
+                let rank = 1
+                if (isTeam) {
+                    data.leaderboard = data.leaderboard.map(
+                        (data: leaderboardType) => {
+                            return { ...data, username: data.fullName }
+                        }
+                    )
+                }
+                const leaderboardData = data.leaderboard.map(
+                    (item: leaderboardType) => {
+                        if (lastVal !== item.solvedQuestions) {
+                            lastVal = item.solvedQuestions
+                            rank++
+                        }
+                        return {
+                            ...item,
+                            rank
+                        }
                     }
                 )
-            }
-            const leaderboardData = data.leaderboard.map(
-                (item: leaderboardType) => {
-                    if (lastVal !== item.solvedQuestions) {
-                        lastVal = item.solvedQuestions
-                        rank++
-                    }
-                    return {
-                        ...item,
-                        rank
-                    }
-                }
-            )
 
-            setLeaderboard(leaderboardData)
+                setLeaderboard(leaderboardData)
+            }
         }
+
+        const data = await fetchData({
+            path: '/users/leaderboard'
+        })
+        handleData(data, setLeaderboard, false)
+        const data2 = await fetchData({
+            path: '/users/teamleaderboard'
+        })
+        handleData(data2, setLeaderboard2, true)
+
+        setLoading(false)
     }, [setLoading])
     useEffect(() => {
         loadData()
     }, [loadData])
     const [leaderboard, setLeaderboard] = useState<leaderboardType[]>([])
+    const [leaderboard2, setLeaderboard2] = useState<leaderboardType[]>([])
     let user = localStorage.getItem('user')
     let userObj: {
         _id: string
@@ -112,6 +126,17 @@ const Leaderboard = () => {
                 loading={isLoading}
                 columns={columns}
                 dataSource={leaderboard.map((val) => {
+                    return { ...val, key: val._id }
+                })}
+                className="p-3"
+            />
+            <Typography.Title level={4} className="text-center">
+                LCC Members
+            </Typography.Title>
+            <Table
+                loading={isLoading}
+                columns={columns}
+                dataSource={leaderboard2.map((val) => {
                     return { ...val, key: val._id }
                 })}
                 className="p-3"
