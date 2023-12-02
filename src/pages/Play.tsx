@@ -15,6 +15,7 @@ import {
 import { Md5 } from 'ts-md5'
 import Confetti from 'react-confetti'
 import Joyride, { STATUS } from 'react-joyride'
+import { Message } from '../components/Message'
 
 const { Paragraph, Text } = Typography
 interface Question {
@@ -304,6 +305,7 @@ const Play = () => {
                             </Button>
                         </Form.Item>
                     </Form>
+                    <Message questionno={question.no} />
                 </div>
             )}
         </Layout>
