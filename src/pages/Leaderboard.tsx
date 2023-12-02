@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { fetchData } from '../utils/fetch'
-import { Layout, Table, Typography } from 'antd'
+import { Button, Layout, Table, Typography } from 'antd'
 import { ColumnsType } from 'antd/es/table'
+import { WhatsAppOutlined } from '@ant-design/icons'
 
 const { Paragraph, Text } = Typography
 interface leaderboardType {
@@ -98,6 +99,15 @@ const Leaderboard = () => {
                     <Paragraph>username: {userObj.username}</Paragraph>
                 </div>
             )}
+            <Button
+                onClick={() => {
+                    window.location.href =
+                        'https://chat.whatsapp.com/LdalrkM859WACWVTm9Be1x'
+                }}
+                icon={<WhatsAppOutlined />}
+            >
+                Join for hints
+            </Button>
             <Table
                 loading={isLoading}
                 columns={columns}
