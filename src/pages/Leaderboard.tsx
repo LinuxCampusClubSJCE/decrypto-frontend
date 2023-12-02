@@ -11,6 +11,7 @@ interface leaderboardType {
     username: string
     fullName?: string
     solvedQuestions: number
+    totalAttempts: number
 }
 
 const columns: ColumnsType<leaderboardType> = [
@@ -31,10 +32,29 @@ const columns: ColumnsType<leaderboardType> = [
         dataIndex: 'solvedQuestions'
     }
 ]
+const columnsFF: ColumnsType<leaderboardType> = [
+    {
+        title: 'Username',
+        dataIndex: 'username'
+    },
+    {
+        title: 'Attempts',
+        dataIndex: 'totalAttempts'
+    }
+]
+const columnsBB: ColumnsType<leaderboardType> = [
+    {
+        title: 'Username',
+        dataIndex: 'username'
+    },
+    {
+        title: 'Cracked',
+        dataIndex: 'totalCrack'
+    }
+]
 
 const Leaderboard = () => {
     const [isLoading, setLoading] = useState(false)
-
     const loadData = useCallback(async () => {
         setLoading(true)
         const handleData = (
@@ -55,6 +75,9 @@ const Leaderboard = () => {
                             return { ...data, username: data.fullName }
                         }
                     )
+                } else {
+                    setBb(data.bigBrains)
+                    setFf(data.fastFingers)
                 }
                 const leaderboardData = data.leaderboard.map(
                     (item: leaderboardType) => {
@@ -89,6 +112,8 @@ const Leaderboard = () => {
     }, [loadData])
     const [leaderboard, setLeaderboard] = useState<leaderboardType[]>([])
     const [leaderboard2, setLeaderboard2] = useState<leaderboardType[]>([])
+    const [ff, setFf] = useState<leaderboardType[]>([])
+    const [bb, setBb] = useState<leaderboardType[]>([])
     let user = localStorage.getItem('user')
     let userObj: {
         _id: string
@@ -125,17 +150,35 @@ const Leaderboard = () => {
             <Table
                 loading={isLoading}
                 columns={columns}
+                title={() => 'Leaderboard'}
                 dataSource={leaderboard.map((val) => {
                     return { ...val, key: val._id }
                 })}
                 className="p-3"
             />
-            <Typography.Title level={4} className="text-center">
-                LCC Members
-            </Typography.Title>
+            <Table
+                loading={isLoading}
+                columns={columnsBB}
+                title={() => 'BB - (Big Brains) Most Cracked'}
+                dataSource={bb.map((val) => {
+                    return { ...val, key: val._id }
+                })}
+                className="p-3"
+            />
+            <Table
+                loading={isLoading}
+                columns={columnsFF}
+                title={() => 'FF - (Fast Fingers) Most Tried'}
+                dataSource={ff.map((val) => {
+                    return { ...val, key: val._id }
+                })}
+                className="p-3"
+            />
+
             <Table
                 loading={isLoading}
                 columns={columns}
+                title={() => 'LCC Members'}
                 dataSource={leaderboard2.map((val) => {
                     return { ...val, key: val._id }
                 })}

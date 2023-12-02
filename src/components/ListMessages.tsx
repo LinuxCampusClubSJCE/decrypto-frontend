@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { fetchData } from '../utils/fetch'
-import { Layout, Table } from 'antd'
+import { Button, Layout, Table, message } from 'antd'
 
 export const ListMessages = () => {
     interface Message {
@@ -50,6 +50,17 @@ export const ListMessages = () => {
     ]
     return (
         <Layout>
+            <Button
+                onClick={async () => {
+                    const data = await fetchData({
+                        path: '/message/all',
+                        method: 'DELETE'
+                    })
+                    message.success(data.message)
+                }}
+            >
+                Delete all{' '}
+            </Button>
             <Table columns={columns} dataSource={messages} />
         </Layout>
     )

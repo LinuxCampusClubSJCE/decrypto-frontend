@@ -175,6 +175,15 @@ const ArrangeQuestions: React.FC<ArrangeQuestionsProps> = ({ showImage }) => {
         }
     }
 
+    const AppendToSelcted = (question: Question) => {
+        setSelectedQuestions((prev) => {
+            return [...prev, question]
+        })
+        setRemainingQuestions((prev) => {
+            return prev.filter((ele) => ele._id !== question._id)
+        })
+    }
+
     const saveSelectedQuestions = async () => {
         const selectedIds = selectedQuestions.map((question) => question._id)
         setLoading(true)
@@ -317,6 +326,7 @@ const ArrangeQuestions: React.FC<ArrangeQuestionsProps> = ({ showImage }) => {
                             name="Remaining"
                             showTitle={false}
                             onDelete={deleteQuestion}
+                            AppendToSelcted={AppendToSelcted}
                         />
                     </div>
                 </div>
@@ -332,12 +342,14 @@ const DropList = ({
     questions,
     name,
     showTitle,
-    onDelete
+    onDelete,
+    AppendToSelcted
 }: {
     questions: Question[]
     name: string
     showTitle: boolean
     onDelete: (id: string) => void
+    AppendToSelcted?: (question: Question) => void
 }) => {
     return (
         <Droppable droppableId={name}>
@@ -437,6 +449,20 @@ const DropList = ({
                                                     >
                                                         <DeleteOutlined className="text-red-400" />
                                                     </Button>
+                                                    {!showTitle && (
+                                                        <Button
+                                                            onClick={() => {
+                                                                if (
+                                                                    AppendToSelcted
+                                                                )
+                                                                    AppendToSelcted(
+                                                                        question
+                                                                    )
+                                                            }}
+                                                        >
+                                                            Append to selected
+                                                        </Button>
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>
