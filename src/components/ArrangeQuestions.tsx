@@ -28,6 +28,9 @@ interface Question {
     answer: string
     difficulty: number
     category: QuestionCategory
+    rateCount: number
+    avgAttempts: number
+    rating: number
     creator: {
         fullName: string
         username: string
@@ -66,10 +69,12 @@ const sortByKey = (
 
     return sortedArray
 }
+interface ArrangeQuestionsProps {
+    showImage: boolean
+}
 
-const ArrangeQuestions: React.FC = () => {
+const ArrangeQuestions: React.FC<ArrangeQuestionsProps> = ({ showImage }) => {
     const { setLoading } = useContext(LoadingContext)
-
     const [contest_id, setContest_id] = useState<string>()
     const [selectedQuestions, setSelectedQuestions] = useState<Question[]>([])
     const [remainingQuestions, setRemainingQuestions] = useState<Question[]>([])
@@ -81,8 +86,12 @@ const ArrangeQuestions: React.FC = () => {
     const fetchDataFromAPI = useCallback(async () => {
         try {
             setLoading(true)
-            const allQuestionsRes = await fetchData({ path: '/question/' })
-            const selected = await fetchData({ path: '/contest/' })
+            const allQuestionsRes = await fetchData({
+                path: `/question/?showImage=${showImage}`
+            })
+            const selected = await fetchData({
+                path: `/contest/?showImage=${showImage}`
+            })
             setLoading(false)
             const allQuestions = allQuestionsRes['questions']
             setContest_id(selected['contest']['_id'])
@@ -101,7 +110,7 @@ const ArrangeQuestions: React.FC = () => {
         } catch (error) {
             console.error('Error fetching data:', error)
         }
-    }, [setLoading])
+    }, [setLoading, showImage])
     useEffect(() => {
         fetchDataFromAPI()
     }, [fetchDataFromAPI, setLoading])
@@ -368,7 +377,7 @@ const DropList = ({
                                                 </Text>
                                             )}
                                         </div>
-                                        <div className="h-40 flex w-full p-2">
+                                        <div className="h-60 flex w-full p-2">
                                             <img
                                                 alt={`Question ${index + 1}`}
                                                 className="h-full max-w-[50%] object-contain"
@@ -393,6 +402,23 @@ const DropList = ({
                                                     {question.creator.fullName}{' '}
                                                     ({question.creator.username}
                                                     )
+                                                </div>
+                                                <div>
+                                                    <Paragraph>Game</Paragraph>
+                                                    <Paragraph>
+                                                        Attempts:{' '}
+                                                        {question.avgAttempts.toFixed(
+                                                            1
+                                                        )}
+                                                    </Paragraph>
+                                                    <Paragraph>
+                                                        Completed by:{' '}
+                                                        {question.rateCount}
+                                                    </Paragraph>
+                                                    <Rate
+                                                        disabled
+                                                        value={question.rating}
+                                                    />
                                                 </div>
                                                 <div className="flex justify-center space-x-2">
                                                     <Link

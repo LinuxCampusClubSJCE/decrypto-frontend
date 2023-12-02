@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import ListUsers from '../components/ListUsers'
 import ListQuestionCount from '../components/ListQuestionCount'
 import ListCategoryCount from '../components/ListCategoryCount'
+import { ListMessages } from '../components/ListMessages'
 const Admin = () => {
     const navigate = useNavigate()
     return (
@@ -29,10 +30,18 @@ const Admin = () => {
                 >
                     Arrange Question
                 </Button>
+                <Button
+                    onClick={() => {
+                        navigate('/arrangenoimg')
+                    }}
+                >
+                    Arrange Question (without Images)
+                </Button>
             </div>
             <ListQuestionCount />
             <ListCategoryCount />
             <ListUsers />
+            <ListMessages />
         </div>
     )
 }

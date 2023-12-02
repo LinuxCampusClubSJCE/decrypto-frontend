@@ -262,7 +262,25 @@ function App() {
                                             </Text>
                                         }
                                     >
-                                        <LazyArrangeQuestions />
+                                        <LazyArrangeQuestions
+                                            showImage={true}
+                                        />
+                                    </Suspense>
+                                }
+                            />
+                            <Route
+                                path="/arrangenoimg"
+                                element={
+                                    <Suspense
+                                        fallback={
+                                            <Text className="flex items-center justify-center h-full text-lg monospace">
+                                                loading...
+                                            </Text>
+                                        }
+                                    >
+                                        <LazyArrangeQuestions
+                                            showImage={false}
+                                        />
                                     </Suspense>
                                 }
                             />
