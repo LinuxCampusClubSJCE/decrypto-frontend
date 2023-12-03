@@ -224,6 +224,9 @@ const Play = () => {
                             />
                         )}
                     <div className="space-y-2 mb-8 mt-4">
+                        <Paragraph className="text-2xl text-red-500 text-center">
+                            Contest Ended
+                        </Paragraph>
                         <Text className="text-2xl text-center">
                             Question {question.no}
                         </Text>

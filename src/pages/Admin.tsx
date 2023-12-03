@@ -4,6 +4,7 @@ import ListUsers from '../components/ListUsers'
 import ListQuestionCount from '../components/ListQuestionCount'
 import ListCategoryCount from '../components/ListCategoryCount'
 import { ListMessages } from '../components/ListMessages'
+import { ListLogs } from '../components/ListLogs'
 const Admin = () => {
     const navigate = useNavigate()
     return (
@@ -42,6 +43,7 @@ const Admin = () => {
             <ListCategoryCount />
             <ListUsers />
             <ListMessages />
+            <ListLogs />
         </div>
     )
 }
