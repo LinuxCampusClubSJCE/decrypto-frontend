@@ -1,8 +1,6 @@
-import { Table, message } from 'antd'
+import { Table } from 'antd'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { fetchData } from '../utils/fetch'
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
-import { useNavigate } from 'react-router-dom'
 import LoadingContext from '../utils/LoadingContext'
 
 interface question {
