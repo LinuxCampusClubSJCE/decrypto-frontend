@@ -59,6 +59,9 @@ const LazyCreateContest = React.lazy(() => import('./pages/CreateContest'))
 const LazyArrangeQuestions = React.lazy(
     () => import('./components/ArrangeQuestions')
 )
+const LazySelectedQuestions = React.lazy(
+    () => import('./pages/SelectedQuestions')
+)
 const LazyAddQuestionTeam = React.lazy(() => import('./pages/AddQuestionTeam'))
 
 function App() {
@@ -281,6 +284,20 @@ function App() {
                                         <LazyArrangeQuestions
                                             showImage={false}
                                         />
+                                    </Suspense>
+                                }
+                            />
+                            <Route
+                                path="/selectedque"
+                                element={
+                                    <Suspense
+                                        fallback={
+                                            <Text className="flex items-center justify-center h-full text-lg monospace">
+                                                loading...
+                                            </Text>
+                                        }
+                                    >
+                                        <LazySelectedQuestions />
                                     </Suspense>
                                 }
                             />

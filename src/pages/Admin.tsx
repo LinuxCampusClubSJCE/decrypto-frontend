@@ -38,6 +38,13 @@ const Admin = () => {
                 >
                     Arrange Question (without Images)
                 </Button>
+                <Button
+                    onClick={() => {
+                        navigate('/selectedque')
+                    }}
+                >
+                    List All Selected Questions
+                </Button>
             </div>
             <ListQuestionCount />
             <ListCategoryCount />

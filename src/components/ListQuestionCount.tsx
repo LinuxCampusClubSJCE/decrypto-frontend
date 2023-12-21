@@ -22,7 +22,7 @@ const ListQuestionCount = () => {
         },
         {
             title: 'Count',
-            dataIndex: 'questionCount',
+            dataIndex: 'codeName',
             sorter: (a: user, b: user) => a.questionCount - b.questionCount
         }
     ]

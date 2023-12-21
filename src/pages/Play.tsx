@@ -12,7 +12,7 @@ import {
     Typography,
     message
 } from 'antd'
-import { Md5 } from 'ts-md5'
+import bcrypt from 'bcryptjs-react'
 import Confetti from 'react-confetti'
 import Joyride, { STATUS } from 'react-joyride'
 import { Message } from '../components/Message'
@@ -121,7 +121,8 @@ const Play = () => {
         const answer = modifyString(values.answer)
         avgAttempts.current++
         localStorage.setItem('avgAttempts', String(avgAttempts.current))
-        if (Md5.hashStr(answer + '0') !== question.answer) {
+        const compare = await bcrypt.compare(answer, question.answer)
+        if (!compare) {
             inputRef.current?.input?.classList.add('apply-shake')
             navigator.vibrate(100)
             setValidateStatus('error')
@@ -224,9 +225,6 @@ const Play = () => {
                             />
                         )}
                     <div className="space-y-2 mb-8 mt-4">
-                        <Paragraph className="text-2xl text-red-500 text-center">
-                            Contest Ended
-                        </Paragraph>
                         <Text className="text-2xl text-center">
                             Question {question.no}
                         </Text>
