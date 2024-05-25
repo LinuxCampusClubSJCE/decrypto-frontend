@@ -138,7 +138,7 @@ const Leaderboard = () => {
                     <Paragraph>username: {userObj.username}</Paragraph>
                 </div>
             )}
-            <Button
+{/*             <Button
                 onClick={() => {
                     window.location.href =
                         'https://chat.whatsapp.com/LdalrkM859WACWVTm9Be1x'
@@ -146,7 +146,7 @@ const Leaderboard = () => {
                 icon={<WhatsAppOutlined />}
             >
                 Join for hints
-            </Button>
+            </Button> */}
             <Table
                 loading={isLoading}
                 columns={columns}
