@@ -116,12 +116,16 @@ const Play = () => {
             clearTimeout(timer)
         })()
     }, [])
+    const modifyString = (inputString: string): string => {
+        const modifiedString = inputString.replace(/\s+/g, '').toLowerCase()
+        return modifiedString
+    }
     const submitAns = async (values: FieldType) => {
         if (question === undefined) return
         const answer = modifyString(values.answer)
         avgAttempts.current++
         localStorage.setItem('avgAttempts', String(avgAttempts.current))
-        const compare = await bcrypt.compare(answer, question.answer)
+        const compare = await bcrypt.compare(modifyString(answer), question.answer)
         if (!compare) {
             inputRef.current?.input?.classList.add('apply-shake')
             navigator.vibrate(100)
