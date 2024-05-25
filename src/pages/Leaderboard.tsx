@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { fetchData } from '../utils/fetch'
-import { Button, Layout, Table, Typography } from 'antd'
+import {  Layout, Table, Typography } from 'antd'
 import { ColumnsType } from 'antd/es/table'
-import { WhatsAppOutlined } from '@ant-design/icons'
+// import { WhatsAppOutlined } from '@ant-design/icons'
 
 const { Paragraph, Text } = Typography
 interface leaderboardType {
