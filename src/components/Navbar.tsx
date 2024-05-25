@@ -101,9 +101,9 @@ const Navbar: React.FC<{
         <div>
             <Flex align="center" justify="space-between" className="p-3">
                 <div className="glitch text-3xl logo-container">
-                    <span aria-hidden="true">Decrypto 2k23</span>
-                    Decrypto 2k23
-                    <span aria-hidden="true">Decrypto 2k23</span>
+                    <span aria-hidden="true">Decrypto 2k24</span>
+                    Decrypto 2k24
+                    <span aria-hidden="true">Decrypto 2k24</span>
                 </div>
                 <div className="flex items-center space-x-7">
                     <DarkModeSwitch
